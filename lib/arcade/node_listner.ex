@@ -10,13 +10,13 @@ defmodule Arcade.NodeListener do
 
   def handle_info({:nodeup, _node, _node_type}, state) do
     set_members(Arcade.HordeRegistry)
-    set_members(Arcade.HordeDynamicSupervisor)
+    set_members(Arcade.WorldSupervisor)
     {:noreply, state}
   end
 
   def handle_info({:nodedown, _node, _node_type}, state) do
     set_members(Arcade.HordeRegistry)
-    set_members(Arcade.HordeDynamicSupervisor)
+    set_members(Arcade.WorldSupervisor)
     {:noreply, state}
   end
 

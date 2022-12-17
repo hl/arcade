@@ -2,6 +2,10 @@ defmodule Arcade.WorldProcess do
   use GenServer
   require Logger
 
+  alias Arcade.WorldState
+
+  # Client
+
   def child_spec(opts) do
     name = Keyword.get(opts, :name, __MODULE__)
 
@@ -24,13 +28,32 @@ defmodule Arcade.WorldProcess do
     end
   end
 
+  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.HordeRegistry, name}}
+
+  def set_map(server, map) do
+    GenServer.cast(server, {:set_map, map})
+  end
+
+  def get_map(server) do
+    GenServer.call(server, :get_map)
+  end
+
+  # Server (callbacks)
+
+  @impl GenServer
   def init(_args) do
-    {:ok, nil}
+    {:ok, WorldState.new()}
   end
 
-  def handle_call(:hello, _from, state) do
-    {:reply, "Hello from #{inspect(Node.self())}", state}
+  @impl GenServer
+  def handle_call(:get_map, _from, state) do
+    map = WorldState.get_map(state)
+    {:reply, map, state}
   end
 
-  def via_tuple(name \\ __MODULE__), do: {:via, Horde.Registry, {Arcade.HordeRegistry, name}}
+  @impl GenServer
+  def handle_cast({:set_map, map}, state) do
+    state = WorldState.set_map(state, map)
+    {:noreply, state}
+  end
 end

@@ -1,4 +1,4 @@
-defmodule Arcade.HordeDynamicSupervisor do
+defmodule Arcade.WorldSupervisor do
   use Horde.DynamicSupervisor
 
   def start_link(_) do

@@ -10,7 +10,7 @@ defmodule Arcade.Application do
     children = [
       {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
       Arcade.HordeRegistry,
-      Arcade.HordeDynamicSupervisor,
+      Arcade.WorldSupervisor,
       Arcade.NodeListener
     ]
 
