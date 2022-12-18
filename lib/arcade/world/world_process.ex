@@ -2,6 +2,7 @@ defmodule Arcade.WorldProcess do
   use GenServer
   require Logger
 
+  alias Arcade.Registry
   alias Arcade.WorldState
 
   # Client
@@ -18,7 +19,7 @@ defmodule Arcade.WorldProcess do
   end
 
   def start_link(name) do
-    case GenServer.start_link(__MODULE__, [], name: via_tuple(name)) do
+    case GenServer.start_link(__MODULE__, [], name: Registry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -27,8 +28,6 @@ defmodule Arcade.WorldProcess do
         :ignore
     end
   end
-
-  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.HordeRegistry, name}}
 
   def set_map(server, map) do
     GenServer.cast(server, {:set_map, map})
