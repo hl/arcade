@@ -23,7 +23,9 @@ defmodule Arcade.MixProject do
   defp deps do
     [
       {:libcluster, "~> 3.3"},
-      {:horde, "~> 0.8.7"}
+      {:horde, "~> 0.8.7"},
+      {:ecto_sql, "~> 3.0"},
+      {:ecto_sqlite3, "~> 0.9.0"}
     ]
   end
 end

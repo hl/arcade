@@ -9,6 +9,7 @@ defmodule Arcade.Application do
   def start(_type, _args) do
     children = [
       {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
+      Arcade.Repo,
       Arcade.Registry,
       Arcade.WorldSupervisor,
       Arcade.NodeListener

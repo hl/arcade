@@ -9,8 +9,10 @@ defmodule Arcade.NodeListener do
 
   @doc false
   def set_members(horde) do
+    nodes = [Node.self() | Node.list()]
+
     Enum.map(horde, fn name ->
-      members = Enum.map([Node.self() | Node.list()], &{name, &1})
+      members = Enum.map(nodes, &{name, &1})
       :ok = Horde.Cluster.set_members(name, members)
     end)
   end
