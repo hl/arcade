@@ -1,7 +1,7 @@
 defmodule Arcade.NodeListener do
   use GenServer
 
-  @horde [Arcade.Registry, Arcade.WorldSupervisor]
+  @horde [Arcade.Registry, Arcade.Worlds.WorldSupervisor]
 
   # Client
 

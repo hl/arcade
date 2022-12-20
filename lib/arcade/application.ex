@@ -11,7 +11,7 @@ defmodule Arcade.Application do
       {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
       Arcade.Repo,
       Arcade.Registry,
-      Arcade.WorldSupervisor,
+      Arcade.Worlds.WorldSupervisor,
       Arcade.NodeListener
     ]
 

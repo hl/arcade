@@ -1,9 +1,9 @@
-defmodule Arcade.WorldProcess do
+defmodule Arcade.Worlds.WorldProcess do
   use GenServer
   require Logger
 
   alias Arcade.Registry
-  alias Arcade.WorldState
+  alias Arcade.Worlds.WorldState
 
   # Client
 

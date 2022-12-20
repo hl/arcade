@@ -1,4 +1,4 @@
-defmodule Arcade.WorldSchema do
+defmodule Arcade.Worlds.WorldSchema do
   use Ecto.Schema
 
   schema "world" do

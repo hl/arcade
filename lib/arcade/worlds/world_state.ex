@@ -1,4 +1,4 @@
-defmodule Arcade.WorldState do
+defmodule Arcade.Worlds.WorldState do
   @moduledoc false
 
   defstruct [:map]

@@ -1,7 +1,7 @@
-defmodule Arcade.World do
+defmodule Arcade.Worlds do
   alias Arcade.Registry
-  alias Arcade.WorldProcess
-  alias Arcade.WorldSupervisor
+  alias Arcade.Worlds.WorldProcess
+  alias Arcade.Worlds.WorldSupervisor
 
   def start(name) do
     [name: name]

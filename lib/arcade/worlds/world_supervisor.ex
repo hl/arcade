@@ -1,4 +1,4 @@
-defmodule Arcade.WorldSupervisor do
+defmodule Arcade.Worlds.WorldSupervisor do
   use Horde.DynamicSupervisor
 
   # Client
