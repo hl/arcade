@@ -1,9 +1,13 @@
-defmodule Arcade.Worlds do
-  alias Arcade.Registry
-  alias Arcade.Worlds.WorldProcess
-  alias Arcade.Worlds.WorldSupervisor
+defmodule Arcade.World do
+  @moduledoc """
+  The World is responsible for ...
+  """
 
-  def start(name) do
+  alias Arcade.Registry
+  alias Arcade.WorldProcess
+  alias Arcade.WorldSupervisor
+
+  def start(name) when is_binary(name) do
     [name: name]
     |> WorldProcess.child_spec()
     |> WorldSupervisor.start_child()

@@ -1,25 +1,30 @@
-defmodule Arcade.Worlds.WorldProcess do
+defmodule Arcade.WorldProcess do
+  @moduledoc """
+  The World process is responsible for ...
+  """
+
   use GenServer
   require Logger
 
   alias Arcade.Registry
-  alias Arcade.Worlds.WorldState
+  alias Arcade.WorldProcess
+  alias Arcade.WorldState
 
   # Client
 
   def child_spec(opts) do
-    name = Keyword.get(opts, :name, __MODULE__)
+    name = Keyword.get(opts, :name, WorldProcess)
 
     %{
-      id: "#{__MODULE__}_#{name}",
-      start: {__MODULE__, :start_link, [name]},
+      id: "#{WorldProcess}_#{name}",
+      start: {WorldProcess, :start_link, [name]},
       shutdown: 10_000,
       restart: :transient
     }
   end
 
   def start_link(name) do
-    case GenServer.start_link(__MODULE__, [], name: Registry.via_tuple(name)) do
+    case GenServer.start_link(WorldProcess, [name: name], name: Registry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -40,8 +45,17 @@ defmodule Arcade.Worlds.WorldProcess do
   # Server (callbacks)
 
   @impl GenServer
-  def init(_args) do
-    {:ok, WorldState.new()}
+  def init(args) do
+    Process.flag(:trap_exit, true)
+    {:ok, args, {:continue, :load_state}}
+  end
+
+  @impl GenServer
+  def handle_continue(:load_state, args) do
+    name = Keyword.fetch!(args, :name)
+    state = WorldState.load_state(name)
+
+    {:noreply, state}
   end
 
   @impl GenServer
@@ -54,5 +68,11 @@ defmodule Arcade.Worlds.WorldProcess do
   def handle_cast({:set_map, map}, state) do
     state = WorldState.set_map(state, map)
     {:noreply, state}
+  end
+
+  @impl GenServer
+  def terminate(reason, state) do
+    WorldState.save_state(state)
+    reason
   end
 end

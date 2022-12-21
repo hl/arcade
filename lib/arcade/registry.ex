@@ -1,18 +1,22 @@
 defmodule Arcade.Registry do
+  @moduledoc """
+  The Registry is responsible for ...
+  """
+
   use Horde.Registry
 
   # Client
 
   def start_link(_) do
-    Horde.Registry.start_link(__MODULE__, [keys: :unique], name: __MODULE__)
+    Horde.Registry.start_link(Arcade.Registry, [keys: :unique], name: Arcade.Registry)
   end
 
-  def via_tuple(name), do: {:via, Horde.Registry, {__MODULE__, name}}
+  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.Registry, name}}
 
   @doc false
   def members do
     [Node.self() | Node.list()]
-    |> Enum.map(fn node -> {__MODULE__, node} end)
+    |> Enum.map(fn node -> {Arcade.Registry, node} end)
   end
 
   # Server (callbacks)

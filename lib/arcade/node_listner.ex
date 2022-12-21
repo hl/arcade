@@ -1,11 +1,17 @@
 defmodule Arcade.NodeListener do
+  @moduledoc """
+  The Node Listener is responsible for ...
+  """
+
   use GenServer
 
-  @horde [Arcade.Registry, Arcade.Worlds.WorldSupervisor]
+  alias Arcade.NodeListener
+
+  @horde [Arcade.Registry, Arcade.WorldSupervisor]
 
   # Client
 
-  def start_link(_), do: GenServer.start_link(__MODULE__, [])
+  def start_link(_), do: GenServer.start_link(NodeListener, [])
 
   @doc false
   def set_members(horde) do
