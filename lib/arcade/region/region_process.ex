@@ -6,7 +6,6 @@ defmodule Arcade.RegionProcess do
   use GenServer
   require Logger
 
-  alias Arcade.HordeRegistry
   alias Arcade.RegionProcess
   alias Arcade.RegionState
   alias Arcade.World
@@ -27,7 +26,7 @@ defmodule Arcade.RegionProcess do
   def start_link(args) do
     name = Keyword.fetch!(args, :name)
 
-    case GenServer.start_link(RegionProcess, args, name: HordeRegistry.via_tuple(name)) do
+    case GenServer.start_link(RegionProcess, args, name: Arcade.Registry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -45,6 +44,7 @@ defmodule Arcade.RegionProcess do
 
     name = Keyword.fetch!(args, :name)
     world_name = Keyword.fetch!(args, :world_name)
+
     World.register_region(world_name, name)
 
     {:ok, args, {:continue, :initial_setup}}
@@ -63,6 +63,7 @@ defmodule Arcade.RegionProcess do
     Logger.info(inspect(reason))
     RegionState.save_state(state)
     World.unregister_region(state.world_name, state.name)
+
     reason
   end
 end

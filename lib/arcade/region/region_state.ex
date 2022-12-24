@@ -8,22 +8,6 @@ defmodule Arcade.RegionState do
 
   defstruct [:name, :world_name]
 
-  def new do
-    %RegionState{}
-  end
-
-  def new(nil) do
-    new()
-  end
-
-  def new(%RegionSchema{} = region_schema) do
-    new(RegionSchema.to_map(region_schema))
-  end
-
-  def new(args) when is_map(args) do
-    struct!(RegionState, args)
-  end
-
   def set_name(%RegionState{} = state, name) do
     %{state | name: name}
   end

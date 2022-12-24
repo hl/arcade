@@ -1,9 +1,15 @@
 import Config
 
 config :libcluster,
-  debug: false
+  debug: false,
+  topologies: [
+    arcade_gossip: [
+      strategy: Cluster.Strategy.Gossip
+    ]
+  ]
 
 config :arcade,
-  ecto_repos: [Arcade.Repo]
+  ecto_repos: [Arcade.Repo],
+  supervisors: [Arcade.WorldSupervisor, Arcade.RegionSupervisor]
 
-config :arcade, Arcade.Repo, database: "data/database.db"
+import_config "#{config_env()}.exs"

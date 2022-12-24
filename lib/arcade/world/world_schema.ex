@@ -13,6 +13,7 @@ defmodule Arcade.WorldSchema do
   schema "worlds" do
     field :name
     field :map
+    field :regions, {:array, :string}
     timestamps()
   end
 

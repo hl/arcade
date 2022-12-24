@@ -13,6 +13,10 @@ defmodule Arcade.Registry do
 
   def via_tuple(name), do: {:via, Horde.Registry, {Arcade.Registry, name}}
 
+  def whereis_name(name) do
+    Horde.Registry.whereis_name({Arcade.Registry, name})
+  end
+
   @doc false
   def members do
     [Node.self() | Node.list()]

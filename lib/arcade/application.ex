@@ -7,13 +7,14 @@ defmodule Arcade.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
-      Arcade.Repo,
-      Arcade.Registry,
-      Arcade.WorldSupervisor,
-      Arcade.NodeListener
-    ]
+    children =
+      List.flatten([
+        {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
+        Arcade.Repo,
+        Arcade.Registry,
+        supervisors(),
+        Arcade.NodeListener
+      ])
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -21,11 +22,11 @@ defmodule Arcade.Application do
     Supervisor.start_link(children, opts)
   end
 
-  defp topologies do
-    [
-      arcade_gossip: [
-        strategy: Cluster.Strategy.Gossip
-      ]
-    ]
+  def topologies do
+    Application.get_env(:libcluster, :topologies)
+  end
+
+  def supervisors do
+    Application.get_env(:arcade, :supervisors)
   end
 end

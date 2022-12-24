@@ -6,7 +6,6 @@ defmodule Arcade.WorldProcess do
   use GenServer
   require Logger
 
-  alias Arcade.Registry
   alias Arcade.WorldProcess
   alias Arcade.WorldState
 
@@ -24,7 +23,7 @@ defmodule Arcade.WorldProcess do
   end
 
   def start_link(name) do
-    case GenServer.start_link(WorldProcess, [name: name], name: Registry.via_tuple(name)) do
+    case GenServer.start_link(WorldProcess, [name: name], name: Arcade.Registry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -40,6 +39,18 @@ defmodule Arcade.WorldProcess do
 
   def get_map(server) do
     GenServer.call(server, :get_map)
+  end
+
+  def register_region(server, region_name) do
+    GenServer.cast(server, {:register_region, region_name})
+  end
+
+  def unregister_region(server, region_name) do
+    GenServer.cast(server, {:unregister_region, region_name})
+  end
+
+  def get_regions(server) do
+    GenServer.call(server, :get_regions)
   end
 
   # Server (callbacks)
@@ -65,8 +76,26 @@ defmodule Arcade.WorldProcess do
   end
 
   @impl GenServer
+  def handle_call(:get_regions, _from, state) do
+    map = WorldState.get_regions(state)
+    {:reply, map, state}
+  end
+
+  @impl GenServer
   def handle_cast({:set_map, map}, state) do
     state = WorldState.set_map(state, map)
+    {:noreply, state}
+  end
+
+  @impl GenServer
+  def handle_cast({:register_region, region_name}, state) do
+    state = WorldState.register_region(state, region_name)
+    {:noreply, state}
+  end
+
+  @impl GenServer
+  def handle_cast({:unregister_region, region_name}, state) do
+    state = WorldState.unregister_region(state, region_name)
     {:noreply, state}
   end
 

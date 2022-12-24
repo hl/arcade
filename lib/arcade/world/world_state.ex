@@ -6,23 +6,9 @@ defmodule Arcade.WorldState do
   alias Arcade.WorldSchema
   alias Arcade.WorldState
 
-  defstruct [:name, :map]
-
-  def new do
-    %WorldState{}
-  end
-
-  def new(nil) do
-    new()
-  end
-
-  def new(%WorldSchema{} = world_schema) do
-    new(WorldSchema.to_map(world_schema))
-  end
-
-  def new(args) when is_map(args) do
-    struct!(WorldState, args)
-  end
+  defstruct name: nil,
+            map: nil,
+            regions: []
 
   def set_name(%WorldState{} = state, name) do
     %{state | name: name}

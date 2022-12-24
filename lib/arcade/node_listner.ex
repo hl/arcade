@@ -7,19 +7,17 @@ defmodule Arcade.NodeListener do
 
   alias Arcade.NodeListener
 
-  @horde [Arcade.Registry, Arcade.WorldSupervisor]
-
   # Client
 
   def start_link(_), do: GenServer.start_link(NodeListener, [])
 
   @doc false
-  def set_members(horde) do
+  def set_members(supervisors) do
     nodes = [Node.self() | Node.list()]
 
-    Enum.map(horde, fn name ->
-      members = Enum.map(nodes, &{name, &1})
-      :ok = Horde.Cluster.set_members(name, members)
+    Enum.map(supervisors, fn supervisor ->
+      members = Enum.map(nodes, &{supervisor, &1})
+      :ok = Horde.Cluster.set_members(supervisor, members)
     end)
   end
 
@@ -33,13 +31,17 @@ defmodule Arcade.NodeListener do
 
   @impl GenServer
   def handle_info({:nodeup, _node, _node_type}, state) do
-    set_members(@horde)
+    set_members(supervisors())
     {:noreply, state}
   end
 
   @impl GenServer
   def handle_info({:nodedown, _node, _node_type}, state) do
-    set_members(@horde)
+    set_members(supervisors())
     {:noreply, state}
+  end
+
+  def supervisors do
+    [Arcade.Registry, Application.get_env(:arcade, :supervisors)]
   end
 end
