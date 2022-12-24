@@ -18,8 +18,8 @@ defmodule Arcade.WorldSchema do
 
   def save(struct, params) do
     struct
-    |> cast(params, ~w/name map/a)
-    |> validate_required(~w/name map/a)
+    |> cast(params, ~w/name map regions/a)
+    |> validate_required(~w/name/a)
     |> Repo.insert_or_update!()
   end
 

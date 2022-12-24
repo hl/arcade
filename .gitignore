@@ -26,4 +26,4 @@ arcade-*.tar
 /tmp/
 
 # Database
-/data/
+data/

@@ -3,7 +3,7 @@ defmodule Arcade.Repo.Migrations.CreateWorlds do
 
   def change do
     create table(:worlds) do
-      add :name, :string
+      add :name, :string, null: false
       add :map, :string
       timestamps()
     end

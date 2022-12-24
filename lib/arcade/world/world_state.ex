@@ -24,7 +24,7 @@ defmodule Arcade.WorldState do
     struct!(WorldState, args)
   end
 
-  def set_name(state, name) do
+  def set_name(%WorldState{} = state, name) do
     %{state | name: name}
   end
 
@@ -32,7 +32,7 @@ defmodule Arcade.WorldState do
     name
   end
 
-  def set_map(state, map) do
+  def set_map(%WorldState{} = state, map) do
     %{state | map: map}
   end
 
@@ -40,7 +40,7 @@ defmodule Arcade.WorldState do
     map
   end
 
-  def save_state(state) do
+  def save_state(%WorldState{} = state) do
     params = to_map(state)
     struct = WorldSchema.get_by_name(state.name) || %WorldSchema{}
 
@@ -54,7 +54,37 @@ defmodule Arcade.WorldState do
     end
   end
 
-  def to_map(world_state) do
-    Map.from_struct(world_state)
+  def to_map(%WorldState{} = world_state) do
+    world_state
+    |> Map.from_struct()
+    |> serialize_regions()
+  end
+
+  def serialize_regions(map) do
+    regions =
+      case map do
+        %{regions: [] = regions} -> regions
+        %{regions: regions} -> MapSet.to_list(regions)
+      end
+
+    %{map | regions: regions}
+  end
+
+  def register_region(%WorldState{} = state, region_name) do
+    case state do
+      %{regions: []} -> %{state | regions: MapSet.new([region_name])}
+      %{regions: regions} -> %{state | regions: MapSet.put(regions, region_name)}
+    end
+  end
+
+  def unregister_region(%WorldState{} = state, region_name) do
+    %{state | regions: MapSet.delete(state.regions, region_name)}
+  end
+
+  def get_regions(%WorldState{} = state) do
+    case state do
+      %{regions: [] = regions} -> regions
+      %{regions: regions} -> MapSet.to_list(regions)
+    end
   end
 end

@@ -72,6 +72,8 @@ defmodule Arcade.WorldProcess do
 
   @impl GenServer
   def terminate(reason, state) do
+    Logger.info(inspect(reason))
+    # TODO: Maybe only save on certain terminate reasons
     WorldState.save_state(state)
     reason
   end
