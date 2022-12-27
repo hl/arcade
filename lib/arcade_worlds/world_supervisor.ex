@@ -1,11 +1,11 @@
-defmodule Arcade.WorldSupervisor do
+defmodule ArcadeWorlds.WorldSupervisor do
   @moduledoc """
   The World supervisor is responsible for ...
   """
 
   use Horde.DynamicSupervisor
 
-  alias Arcade.WorldSupervisor
+  alias ArcadeWorlds.WorldSupervisor
 
   # Client
 

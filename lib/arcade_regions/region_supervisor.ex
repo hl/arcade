@@ -1,11 +1,11 @@
-defmodule Arcade.RegionSupervisor do
+defmodule ArcadeRegions.RegionSupervisor do
   @moduledoc """
   The Region supervisor is responsible for ...
   """
 
   use Horde.DynamicSupervisor
 
-  alias Arcade.RegionSupervisor
+  alias ArcadeRegions.RegionSupervisor
 
   # Client
 
@@ -23,9 +23,8 @@ defmodule Arcade.RegionSupervisor do
   end
 
   @doc false
-  def members() do
-    [Node.self() | Node.list()]
-    |> Enum.map(fn node -> {RegionSupervisor, node} end)
+  def members do
+    Enum.map([Node.self() | Node.list()], &{RegionSupervisor, &1})
   end
 
   # Server (callbacks)

@@ -1,4 +1,4 @@
-defmodule Arcade.WorldSchema do
+defmodule ArcadeWorlds.WorldSchema do
   @moduledoc """
   The World schema is responsible for ...
   """
@@ -6,7 +6,7 @@ defmodule Arcade.WorldSchema do
   use Ecto.Schema
 
   alias Arcade.Repo
-  alias Arcade.WorldSchema
+  alias ArcadeWorlds.WorldSchema
 
   import Ecto.Changeset
 

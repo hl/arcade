@@ -3,6 +3,7 @@ defmodule Arcade.NodeListener do
   The Node Listener is responsible for ...
   """
 
+  use Boundary
   use GenServer
 
   alias Arcade.NodeListener

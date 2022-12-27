@@ -1,14 +1,14 @@
-defmodule Arcade.RegionProcess do
+defmodule ArcadeRegions.RegionProcess do
   @moduledoc """
   The Region process is responsible for ...
   """
 
   use GenServer
+
   require Logger
 
-  alias Arcade.RegionProcess
-  alias Arcade.RegionState
-  alias Arcade.World
+  alias ArcadeRegions.RegionProcess
+  alias ArcadeRegions.RegionState
 
   # Client
 
@@ -45,7 +45,7 @@ defmodule Arcade.RegionProcess do
     name = Keyword.fetch!(args, :name)
     world_name = Keyword.fetch!(args, :world_name)
 
-    World.register_region(world_name, name)
+    ArcadeWorlds.register_region(world_name, name)
 
     {:ok, args, {:continue, :initial_setup}}
   end
@@ -62,7 +62,7 @@ defmodule Arcade.RegionProcess do
   def terminate(reason, state) do
     Logger.info(inspect(reason))
     RegionState.save_state(state)
-    World.unregister_region(state.world_name, state.name)
+    ArcadeWorlds.unregister_region(state.world_name, state.name)
 
     reason
   end

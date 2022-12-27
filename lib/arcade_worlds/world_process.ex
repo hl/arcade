@@ -1,13 +1,14 @@
-defmodule Arcade.WorldProcess do
+defmodule ArcadeWorlds.WorldProcess do
   @moduledoc """
   The World process is responsible for ...
   """
 
   use GenServer
+
   require Logger
 
-  alias Arcade.WorldProcess
-  alias Arcade.WorldState
+  alias ArcadeWorlds.WorldProcess
+  alias ArcadeWorlds.WorldState
 
   # Client
 

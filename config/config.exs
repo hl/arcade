@@ -10,6 +10,9 @@ config :libcluster,
 
 config :arcade,
   ecto_repos: [Arcade.Repo],
-  supervisors: [Arcade.WorldSupervisor, Arcade.RegionSupervisor]
+  supervisors: [
+    ArcadeWorlds.WorldSupervisor,
+    ArcadeRegions.RegionSupervisor
+  ]
 
 import_config "#{config_env()}.exs"

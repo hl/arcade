@@ -1,10 +1,10 @@
-defmodule Arcade.RegionState do
+defmodule ArcadeRegions.RegionState do
   @moduledoc """
   The Region state is responsible for ...
   """
 
-  alias Arcade.RegionSchema
-  alias Arcade.RegionState
+  alias ArcadeRegions.RegionSchema
+  alias ArcadeRegions.RegionState
 
   defstruct [:name, :world_name]
 

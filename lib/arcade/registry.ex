@@ -3,6 +3,7 @@ defmodule Arcade.Registry do
   The Registry is responsible for ...
   """
 
+  use Boundary
   use Horde.Registry
 
   # Client
@@ -19,8 +20,7 @@ defmodule Arcade.Registry do
 
   @doc false
   def members do
-    [Node.self() | Node.list()]
-    |> Enum.map(fn node -> {Arcade.Registry, node} end)
+    Enum.map([Node.self() | Node.list()], &{Arcade.Registry, &1})
   end
 
   # Server (callbacks)

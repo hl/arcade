@@ -1,10 +1,10 @@
-defmodule Arcade.WorldState do
+defmodule ArcadeWorlds.WorldState do
   @moduledoc """
   The World state is responsible for ...
   """
 
-  alias Arcade.WorldSchema
-  alias Arcade.WorldState
+  alias ArcadeWorlds.WorldSchema
+  alias ArcadeWorlds.WorldState
 
   defstruct name: nil,
             map: nil,

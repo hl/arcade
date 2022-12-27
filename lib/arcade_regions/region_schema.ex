@@ -1,4 +1,4 @@
-defmodule Arcade.RegionSchema do
+defmodule ArcadeRegions.RegionSchema do
   @moduledoc """
   The Region schema is responsible for ...
   """
@@ -6,7 +6,7 @@ defmodule Arcade.RegionSchema do
   use Ecto.Schema
 
   alias Arcade.Repo
-  alias Arcade.RegionSchema
+  alias ArcadeRegions.RegionSchema
 
   import Ecto.Changeset
 
@@ -18,8 +18,8 @@ defmodule Arcade.RegionSchema do
 
   def save(struct, params) do
     struct
-    |> cast(params, ~w/world_name name/a)
-    |> validate_required(~w/world_name name/a)
+    |> cast(params, ~w/name world_name/a)
+    |> validate_required(~w/name world_name/a)
     |> Repo.insert_or_update!()
   end
 
