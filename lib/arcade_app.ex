@@ -12,8 +12,8 @@ defmodule ArcadeApp do
       List.flatten([
         {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
         Arcade.Repo,
-        Arcade.Registry,
-        supervisors(),
+        Arcade.HordeRegistry,
+        horde(),
         Arcade.NodeListener
       ])
 
@@ -27,7 +27,7 @@ defmodule ArcadeApp do
     Application.get_env(:libcluster, :topologies)
   end
 
-  def supervisors do
-    Application.get_env(:arcade, :supervisors)
+  def horde do
+    Application.get_env(:arcade, :horde)
   end
 end

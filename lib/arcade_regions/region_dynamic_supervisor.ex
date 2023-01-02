@@ -1,30 +1,30 @@
-defmodule ArcadeRegions.RegionSupervisor do
+defmodule ArcadeRegions.RegionDynamicSupervisor do
   @moduledoc """
   The Region supervisor is responsible for ...
   """
 
   use Horde.DynamicSupervisor
 
-  alias ArcadeRegions.RegionSupervisor
+  alias ArcadeRegions.RegionDynamicSupervisor
 
   # Client
 
   def start_link(_args) do
     Horde.DynamicSupervisor.start_link(
-      RegionSupervisor,
+      RegionDynamicSupervisor,
       [strategy: :one_for_one],
-      name: RegionSupervisor,
-      shutdown: 1000
+      name: RegionDynamicSupervisor,
+      shutdown: 10_000
     )
   end
 
   def start_child(child_spec) do
-    Horde.DynamicSupervisor.start_child(RegionSupervisor, child_spec)
+    Horde.DynamicSupervisor.start_child(RegionDynamicSupervisor, child_spec)
   end
 
   @doc false
   def members do
-    Enum.map([Node.self() | Node.list()], &{RegionSupervisor, &1})
+    Enum.map([Node.self() | Node.list()], &{RegionDynamicSupervisor, &1})
   end
 
   # Server (callbacks)

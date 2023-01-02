@@ -10,9 +10,9 @@ config :libcluster,
 
 config :arcade,
   ecto_repos: [Arcade.Repo],
-  supervisors: [
-    ArcadeWorlds.WorldSupervisor,
-    ArcadeRegions.RegionSupervisor
+  horde: [
+    ArcadeWorlds.WorldDynamicSupervisor,
+    ArcadeRegions.RegionDynamicSupervisor
   ]
 
 import_config "#{config_env()}.exs"

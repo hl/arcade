@@ -7,6 +7,7 @@ defmodule ArcadeRegions.RegionProcess do
 
   require Logger
 
+  alias Arcade.HordeRegistry
   alias ArcadeRegions.RegionProcess
   alias ArcadeRegions.RegionState
 
@@ -26,7 +27,7 @@ defmodule ArcadeRegions.RegionProcess do
   def start_link(args) do
     name = Keyword.fetch!(args, :name)
 
-    case GenServer.start_link(RegionProcess, args, name: Arcade.Registry.via_tuple(name)) do
+    case GenServer.start_link(RegionProcess, args, name: HordeRegistry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 

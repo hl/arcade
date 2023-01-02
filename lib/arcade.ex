@@ -1,5 +1,5 @@
 defmodule Arcade do
   @moduledoc false
 
-  use Boundary, exports: [Repo, Registry]
+  use Boundary, exports: [Repo, HordeRegistry]
 end

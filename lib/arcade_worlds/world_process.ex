@@ -7,6 +7,7 @@ defmodule ArcadeWorlds.WorldProcess do
 
   require Logger
 
+  alias Arcade.HordeRegistry
   alias ArcadeWorlds.WorldProcess
   alias ArcadeWorlds.WorldState
 
@@ -24,7 +25,7 @@ defmodule ArcadeWorlds.WorldProcess do
   end
 
   def start_link(name) do
-    case GenServer.start_link(WorldProcess, [name: name], name: Arcade.Registry.via_tuple(name)) do
+    case GenServer.start_link(WorldProcess, [name: name], name: HordeRegistry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -103,7 +104,6 @@ defmodule ArcadeWorlds.WorldProcess do
   @impl GenServer
   def terminate(reason, state) do
     Logger.info(inspect(reason))
-    # TODO: Maybe only save on certain terminate reasons
     WorldState.save_state(state)
     reason
   end

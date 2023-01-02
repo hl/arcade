@@ -1,31 +1,30 @@
-defmodule ArcadeWorlds.WorldSupervisor do
+defmodule ArcadeWorlds.WorldDynamicSupervisor do
   @moduledoc """
   The World supervisor is responsible for ...
   """
 
   use Horde.DynamicSupervisor
 
-  alias ArcadeWorlds.WorldSupervisor
+  alias ArcadeWorlds.WorldDynamicSupervisor
 
   # Client
 
   def start_link(_args) do
     Horde.DynamicSupervisor.start_link(
-      WorldSupervisor,
+      WorldDynamicSupervisor,
       [strategy: :one_for_one],
-      name: WorldSupervisor,
-      shutdown: 1000
+      name: WorldDynamicSupervisor,
+      shutdown: 10_000
     )
   end
 
   def start_child(child_spec) do
-    Horde.DynamicSupervisor.start_child(WorldSupervisor, child_spec)
+    Horde.DynamicSupervisor.start_child(WorldDynamicSupervisor, child_spec)
   end
 
   @doc false
-  def members() do
-    [Node.self() | Node.list()]
-    |> Enum.map(fn node -> {WorldSupervisor, node} end)
+  def members do
+    Enum.map([Node.self() | Node.list()], &{WorldDynamicSupervisor, &1})
   end
 
   # Server (callbacks)

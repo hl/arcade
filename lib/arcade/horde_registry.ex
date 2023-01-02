@@ -1,4 +1,4 @@
-defmodule Arcade.Registry do
+defmodule Arcade.HordeRegistry do
   @moduledoc """
   The Registry is responsible for ...
   """
@@ -6,21 +6,23 @@ defmodule Arcade.Registry do
   use Boundary
   use Horde.Registry
 
+  alias Arcade.HordeRegistry
+
   # Client
 
   def start_link(_) do
-    Horde.Registry.start_link(Arcade.Registry, [keys: :unique], name: Arcade.Registry)
+    Horde.Registry.start_link(HordeRegistry, [keys: :unique], name: HordeRegistry)
   end
 
-  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.Registry, name}}
+  def via_tuple(name), do: {:via, Horde.Registry, {HordeRegistry, name}}
 
   def whereis_name(name) do
-    Horde.Registry.whereis_name({Arcade.Registry, name})
+    Horde.Registry.whereis_name({HordeRegistry, name})
   end
 
   @doc false
   def members do
-    Enum.map([Node.self() | Node.list()], &{Arcade.Registry, &1})
+    Enum.map([Node.self() | Node.list()], &{HordeRegistry, &1})
   end
 
   # Server (callbacks)
