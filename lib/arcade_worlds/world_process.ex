@@ -8,24 +8,27 @@ defmodule ArcadeWorlds.WorldProcess do
   require Logger
 
   alias Arcade.HordeRegistry
+  alias Arcade.IID
   alias ArcadeWorlds.WorldProcess
   alias ArcadeWorlds.WorldState
 
   # Client
 
-  def child_spec(opts) do
-    name = Keyword.get(opts, :name, WorldProcess)
+  def child_spec(args) do
+    iid = args |> Keyword.fetch!(:iid) |> IID.serialize()
 
     %{
-      id: "#{WorldProcess}_#{name}",
-      start: {WorldProcess, :start_link, [name]},
+      id: "#{WorldProcess}_#{iid}",
+      start: {WorldProcess, :start_link, [args]},
       shutdown: 10_000,
       restart: :transient
     }
   end
 
-  def start_link(name) do
-    case GenServer.start_link(WorldProcess, [name: name], name: HordeRegistry.via_tuple(name)) do
+  def start_link(args) do
+    iid = Keyword.fetch!(args, :iid)
+
+    case GenServer.start_link(WorldProcess, args, name: HordeRegistry.via_tuple(iid)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -65,8 +68,8 @@ defmodule ArcadeWorlds.WorldProcess do
 
   @impl GenServer
   def handle_continue(:load_state, args) do
-    name = Keyword.fetch!(args, :name)
-    state = WorldState.load_state(name)
+    iid = Keyword.fetch!(args, :iid)
+    state = WorldState.load_state(iid)
 
     {:noreply, state}
   end
@@ -90,14 +93,14 @@ defmodule ArcadeWorlds.WorldProcess do
   end
 
   @impl GenServer
-  def handle_cast({:register_region, region_name}, state) do
-    state = WorldState.register_region(state, region_name)
+  def handle_cast({:register_region, region_iid}, state) do
+    state = WorldState.register_region(state, region_iid)
     {:noreply, state}
   end
 
   @impl GenServer
-  def handle_cast({:unregister_region, region_name}, state) do
-    state = WorldState.unregister_region(state, region_name)
+  def handle_cast({:unregister_region, region_iid}, state) do
+    state = WorldState.unregister_region(state, region_iid)
     {:noreply, state}
   end
 

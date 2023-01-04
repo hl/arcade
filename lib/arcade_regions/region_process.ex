@@ -8,26 +8,27 @@ defmodule ArcadeRegions.RegionProcess do
   require Logger
 
   alias Arcade.HordeRegistry
+  alias Arcade.IID
   alias ArcadeRegions.RegionProcess
   alias ArcadeRegions.RegionState
 
   # Client
 
-  def child_spec(opts) do
-    name = Keyword.fetch!(opts, :name)
+  def child_spec(args) do
+    iid = args |> Keyword.fetch!(:iid) |> IID.serialize()
 
     %{
-      id: "#{RegionProcess}_#{name}",
-      start: {RegionProcess, :start_link, [opts]},
+      id: "#{RegionProcess}_#{iid}",
+      start: {RegionProcess, :start_link, [args]},
       shutdown: 10_000,
       restart: :transient
     }
   end
 
   def start_link(args) do
-    name = Keyword.fetch!(args, :name)
+    iid = Keyword.fetch!(args, :iid)
 
-    case GenServer.start_link(RegionProcess, args, name: HordeRegistry.via_tuple(name)) do
+    case GenServer.start_link(RegionProcess, args, name: HordeRegistry.via_tuple(iid)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -43,18 +44,18 @@ defmodule ArcadeRegions.RegionProcess do
   def init(args) do
     Process.flag(:trap_exit, true)
 
-    name = Keyword.fetch!(args, :name)
-    world_name = Keyword.fetch!(args, :world_name)
+    iid = Keyword.fetch!(args, :iid)
+    world_iid = Keyword.fetch!(args, :world_iid)
 
-    ArcadeWorlds.register_region(world_name, name)
+    ArcadeWorlds.register_region(world_iid, iid)
 
     {:ok, args, {:continue, :initial_setup}}
   end
 
   @impl GenServer
   def handle_continue(:initial_setup, args) do
-    name = Keyword.fetch!(args, :name)
-    state = RegionState.load_state(name, args)
+    iid = Keyword.fetch!(args, :iid)
+    state = RegionState.load_state(iid, args)
 
     {:noreply, state}
   end
@@ -63,7 +64,7 @@ defmodule ArcadeRegions.RegionProcess do
   def terminate(reason, state) do
     Logger.info(inspect(reason))
     RegionState.save_state(state)
-    ArcadeWorlds.unregister_region(state.world_name, state.name)
+    ArcadeWorlds.unregister_region(state.world_iid, state.iid)
 
     reason
   end

@@ -6,17 +6,7 @@ defmodule ArcadeWorlds.WorldState do
   alias ArcadeWorlds.WorldSchema
   alias ArcadeWorlds.WorldState
 
-  defstruct name: nil,
-            map: nil,
-            regions: []
-
-  def set_name(%WorldState{} = state, name) do
-    %{state | name: name}
-  end
-
-  def get_name(%WorldState{name: name}) do
-    name
-  end
+  defstruct iid: nil, name: nil, map: nil, regions: []
 
   def set_map(%WorldState{} = state, map) do
     %{state | map: map}
@@ -28,14 +18,14 @@ defmodule ArcadeWorlds.WorldState do
 
   def save_state(%WorldState{} = state) do
     params = to_map(state)
-    struct = WorldSchema.get_by_name(state.name) || %WorldSchema{}
+    struct = WorldSchema.get_by_iid(state.iid) || %WorldSchema{}
 
     WorldSchema.save(struct, params)
   end
 
-  def load_state(name) do
-    case WorldSchema.get_by_name(name) do
-      nil -> %WorldState{name: name}
+  def load_state(iid) do
+    case WorldSchema.get_by_iid(iid) do
+      nil -> %WorldState{iid: iid}
       world_schema -> struct!(WorldState, WorldSchema.to_map(world_schema))
     end
   end
@@ -56,15 +46,15 @@ defmodule ArcadeWorlds.WorldState do
     %{map | regions: regions}
   end
 
-  def register_region(%WorldState{} = state, region_name) do
+  def register_region(%WorldState{} = state, region_iid) do
     case state do
-      %{regions: []} -> %{state | regions: MapSet.new([region_name])}
-      %{regions: regions} -> %{state | regions: MapSet.put(regions, region_name)}
+      %{regions: []} -> %{state | regions: MapSet.new([region_iid])}
+      %{regions: regions} -> %{state | regions: MapSet.put(regions, region_iid)}
     end
   end
 
-  def unregister_region(%WorldState{} = state, region_name) do
-    %{state | regions: MapSet.delete(state.regions, region_name)}
+  def unregister_region(%WorldState{} = state, region_iid) do
+    %{state | regions: MapSet.delete(state.regions, region_iid)}
   end
 
   def get_regions(%WorldState{} = state) do

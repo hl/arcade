@@ -5,6 +5,8 @@ defmodule Arcade.HordeCase do
 
   using do
     quote do
+      alias Arcade.HordeRegistry
+
       import Arcade.HordeCase
     end
   end

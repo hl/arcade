@@ -1,25 +1,28 @@
 defmodule ArcadeRegionsTest do
+  alias Arcade.HordeRegistry
   use Arcade.HordeCase
 
   describe "Region.start_child/2" do
     setup do
       world_name = random_name("world")
-      ArcadeWorlds.start_child(world_name)
+      {:ok, pid} = ArcadeWorlds.start_child(world_name)
+      world_iid = HordeRegistry.get_key(pid)
 
-      [world_name: world_name]
+      [world_iid: world_iid]
     end
 
-    test "start a new supervised region", %{world_name: world_name} do
+    test "start a new supervised region", %{world_iid: world_iid} do
       region_name = random_name("region")
 
-      assert {:ok, _pid} = ArcadeRegions.start_child(region_name, world_name)
+      assert {:ok, _pid} = ArcadeRegions.start_child(region_name, world_iid)
     end
 
-    test "check if region is registered on the world", %{world_name: world_name} do
+    test "check if region is registered on the world", %{world_iid: world_iid} do
       region_name = random_name("region")
-      ArcadeRegions.start_child(region_name, world_name)
+      {:ok, pid} = ArcadeRegions.start_child(region_name, world_iid)
+      region_iid = HordeRegistry.get_key(pid)
 
-      assert region_name in ArcadeWorlds.get_regions(world_name)
+      assert region_iid in ArcadeWorlds.get_regions(world_iid)
     end
   end
 end

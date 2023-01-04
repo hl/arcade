@@ -3,6 +3,7 @@ defmodule Arcade.Repo.Migrations.CreateWorlds do
 
   def change do
     create table(:worlds) do
+      add :iid, :string, null: false
       add :name, :string, null: false
       add :map, :string
       add :regions, :map

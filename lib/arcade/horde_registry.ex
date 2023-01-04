@@ -6,23 +6,39 @@ defmodule Arcade.HordeRegistry do
   use Boundary
   use Horde.Registry
 
-  alias Arcade.HordeRegistry
-
   # Client
 
   def start_link(_) do
-    Horde.Registry.start_link(HordeRegistry, [keys: :unique], name: HordeRegistry)
+    Horde.Registry.start_link(Arcade.HordeRegistry, [keys: :unique], name: Arcade.HordeRegistry)
   end
 
-  def via_tuple(name), do: {:via, Horde.Registry, {HordeRegistry, name}}
+  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.HordeRegistry, name}}
 
   def whereis_name(name) do
-    Horde.Registry.whereis_name({HordeRegistry, name})
+    Horde.Registry.whereis_name({Arcade.HordeRegistry, name})
+  end
+
+  def get_key(pid) do
+    case Horde.Registry.keys(Arcade.HordeRegistry, pid) do
+      [key] -> key
+      _empty -> nil
+    end
+  end
+
+  def select(spec) do
+    Horde.Registry.select(Arcade.HordeRegistry, spec)
+  end
+
+  def next_key(type, name) do
+    case select([{{{type, name, :"$1"}, :_, :_}, [], [:"$1"]}]) do
+      [] -> 1
+      list -> Enum.max(list) + 1
+    end
   end
 
   @doc false
   def members do
-    Enum.map([Node.self() | Node.list()], &{HordeRegistry, &1})
+    Enum.map([Node.self() | Node.list()], &{Arcade.HordeRegistry, &1})
   end
 
   # Server (callbacks)
