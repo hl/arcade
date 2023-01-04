@@ -4,7 +4,7 @@ defmodule ArcadeRegionsTest do
 
   describe "Region.start_child/2" do
     setup do
-      world_name = random_name("world")
+      world_name = "world"
       {:ok, pid} = ArcadeWorlds.start_child(world_name)
       world_iid = HordeRegistry.get_key(pid)
 
@@ -12,13 +12,13 @@ defmodule ArcadeRegionsTest do
     end
 
     test "start a new supervised region", %{world_iid: world_iid} do
-      region_name = random_name("region")
+      region_name = "region"
 
       assert {:ok, _pid} = ArcadeRegions.start_child(region_name, world_iid)
     end
 
     test "check if region is registered on the world", %{world_iid: world_iid} do
-      region_name = random_name("region")
+      region_name = "region"
       {:ok, pid} = ArcadeRegions.start_child(region_name, world_iid)
       region_iid = HordeRegistry.get_key(pid)
 
