@@ -25,17 +25,6 @@ defmodule Arcade.Registry do
     end
   end
 
-  def select(spec) do
-    Horde.Registry.select(Arcade.Registry, spec)
-  end
-
-  def next_index(type, name) do
-    case select([{{{type, name, :"$1"}, :_, :_}, [], [:"$1"]}]) do
-      [] -> 1
-      list -> Enum.max(list) + 1
-    end
-  end
-
   @doc false
   def members do
     Enum.map([Node.self() | Node.list()], &{Arcade.Registry, &1})

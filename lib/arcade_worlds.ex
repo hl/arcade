@@ -11,10 +11,7 @@ defmodule ArcadeWorlds do
   @registry_type :world
 
   def start_child(name) when is_binary(name) do
-    index = Arcade.Registry.next_index(@registry_type, name)
-    name = {@registry_type, name, index}
-
-    [name: name]
+    [name: {@registry_type, name}]
     |> WorldProcess.child_spec()
     |> WorldDynamicSupervisor.start_child()
   end

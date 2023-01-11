@@ -9,6 +9,6 @@ defmodule Arcade.Repo.Migrations.CreateRegions do
       timestamps()
     end
 
-    create unique_index(:regions, [:name])
+    create unique_index(:regions, [:name, :coordinates])
   end
 end

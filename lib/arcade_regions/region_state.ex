@@ -28,14 +28,17 @@ defmodule ArcadeRegions.RegionState do
 
   def get_coordinates(%RegionState{coordinates: coordinates}) do
     base = Decimal.round(coordinates, 0, :down)
+    x = Decimal.to_integer(base)
 
-    {Decimal.to_integer(base),
-     Decimal.to_integer(
-       Decimal.mult(
-         Decimal.sub(coordinates, base),
-         Decimal.new(10)
-       )
-     )}
+    y =
+      Decimal.to_integer(
+        Decimal.mult(
+          Decimal.sub(coordinates, base),
+          Decimal.new(10)
+        )
+      )
+
+    %{x: x, y: y}
   end
 
   def to_map(%RegionState{} = region_state) do

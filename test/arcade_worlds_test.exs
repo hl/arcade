@@ -3,18 +3,18 @@ defmodule ArcadeWorldsTest do
 
   describe "World.start_child/1" do
     test "start a new supervised world" do
-      {:ok, pid} = ArcadeWorlds.start_child("test-world")
+      world_name = "test-world-#{:rand.uniform()}"
+      {:ok, pid} = ArcadeWorlds.start_child(world_name)
       world_name = Arcade.Registry.get_name(pid)
 
-      assert {:world, name, num} = world_name
+      assert {:world, name} = world_name
       assert is_binary(name)
-      assert is_integer(num)
     end
   end
 
   describe "World.set_map/2" do
     setup do
-      world_name = "test-world"
+      world_name = "test-world-#{:rand.uniform()}"
       {:ok, pid} = ArcadeWorlds.start_child(world_name)
       world_name = Arcade.Registry.get_name(pid)
 
@@ -29,7 +29,7 @@ defmodule ArcadeWorldsTest do
 
   describe "World.get_map/1" do
     setup do
-      world_name = "world"
+      world_name = "test-world-#{:rand.uniform()}"
       {:ok, pid} = ArcadeWorlds.start_child(world_name)
       world_name = Arcade.Registry.get_name(pid)
 
