@@ -1,28 +1,35 @@
 defmodule ArcadeRegionsTest do
-  alias Arcade.HordeRegistry
-  use Arcade.HordeCase
+  use ExUnit.Case
 
-  describe "Region.start_child/2" do
+  describe("Region.start_child/2") do
     setup do
-      world_name = "world"
+      world_name = "test-world"
       {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_iid = HordeRegistry.get_key(pid)
+      world_name = Arcade.Registry.get_name(pid)
 
-      [world_iid: world_iid]
+      [world_name: world_name]
     end
 
-    test "start a new supervised region", %{world_iid: world_iid} do
-      region_name = "region"
+    test "start a new supervised region", %{world_name: world_name} do
+      region_name = "test-region"
 
-      assert {:ok, _pid} = ArcadeRegions.start_child(region_name, world_iid)
+      assert {:ok, _pid} = ArcadeRegions.start_child(region_name, world_name, 0.1)
     end
 
-    test "check if region is registered on the world", %{world_iid: world_iid} do
-      region_name = "region"
-      {:ok, pid} = ArcadeRegions.start_child(region_name, world_iid)
-      region_iid = HordeRegistry.get_key(pid)
+    test "check if region is registered on the world", %{world_name: world_name} do
+      region_name = "test-region"
+      {:ok, pid} = ArcadeRegions.start_child(region_name, world_name, 0.1)
+      region_name = Arcade.Registry.get_name(pid)
 
-      assert region_iid in ArcadeWorlds.get_regions(world_iid)
+      assert region_name in ArcadeWorlds.get_regions(world_name)
+    end
+
+    test "check if region has correct coordinates", %{world_name: world_name} do
+      region_name = "test-region"
+      {:ok, pid} = ArcadeRegions.start_child(region_name, world_name, 4.7)
+      region_name = Arcade.Registry.get_name(pid)
+
+      assert {4, 7} = ArcadeRegions.get_coordinates(region_name)
     end
   end
 end

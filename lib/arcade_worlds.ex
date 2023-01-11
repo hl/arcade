@@ -1,52 +1,51 @@
 defmodule ArcadeWorlds do
   @moduledoc """
-  The World is responsible for ...
+  The ArcadeWorlds is responsible for ...
   """
 
   use Boundary, deps: [Arcade]
 
-  alias Arcade.HordeRegistry
   alias ArcadeWorlds.WorldDynamicSupervisor
   alias ArcadeWorlds.WorldProcess
 
   @registry_type :world
 
   def start_child(name) when is_binary(name) do
-    num = HordeRegistry.next_key(@registry_type, name)
-    iid = {@registry_type, name, num}
+    index = Arcade.Registry.next_index(@registry_type, name)
+    name = {@registry_type, name, index}
 
-    [iid: iid, name: name]
+    [name: name]
     |> WorldProcess.child_spec()
     |> WorldDynamicSupervisor.start_child()
   end
 
-  def set_map(iid, map) do
-    iid
-    |> HordeRegistry.whereis_name()
+  def set_map(name, map) do
+    name
+    |> Arcade.Registry.whereis_name()
     |> WorldProcess.set_map(map)
   end
 
-  def get_map(iid) do
-    iid
-    |> HordeRegistry.whereis_name()
+  def get_map(name) do
+    name
+    |> Arcade.Registry.whereis_name()
     |> WorldProcess.get_map()
   end
 
-  def register_region(iid, region_iid) do
-    iid
-    |> HordeRegistry.whereis_name()
-    |> WorldProcess.register_region(region_iid)
+  def register_region(name, region_name) do
+    name
+    |> Arcade.Registry.whereis_name()
+    |> WorldProcess.register_region(region_name)
   end
 
-  def unregister_region(iid, region_iid) do
-    iid
-    |> HordeRegistry.whereis_name()
-    |> WorldProcess.unregister_region(region_iid)
+  def unregister_region(name, region_name) do
+    name
+    |> Arcade.Registry.whereis_name()
+    |> WorldProcess.unregister_region(region_name)
   end
 
-  def get_regions(iid) do
-    iid
-    |> HordeRegistry.whereis_name()
+  def get_regions(name) do
+    name
+    |> Arcade.Registry.whereis_name()
     |> WorldProcess.get_regions()
   end
 end

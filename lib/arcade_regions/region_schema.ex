@@ -5,36 +5,36 @@ defmodule ArcadeRegions.RegionSchema do
 
   use Ecto.Schema
 
-  alias Arcade.IID
+  alias Arcade.ProcessName
   alias Arcade.Repo
   alias ArcadeRegions.RegionSchema
 
   import Ecto.Changeset
 
   schema "regions" do
-    field :iid
     field :name
-    field :world_iid
+    field :world_name
+    field :coordinates, :decimal
     timestamps()
   end
 
   def save(struct, params) do
     struct
-    |> cast(params, ~w/iid name world_iid/a)
-    |> validate_required(~w/iid name world_iid/a)
+    |> cast(params, ~w/name name world_name coordinates/a)
+    |> validate_required(~w/name name world_name coordinates/a)
     |> Repo.insert_or_update!()
   end
 
-  def get_by_iid(iid) when is_tuple(iid) do
-    iid |> IID.serialize() |> get_by_iid()
+  def get_by_name(name) when is_tuple(name) do
+    name |> ProcessName.serialize() |> get_by_name()
   end
 
-  def get_by_iid(iid) when is_binary(iid) do
-    Repo.get_by(RegionSchema, iid: iid)
+  def get_by_name(name) when is_binary(name) do
+    Repo.get_by(RegionSchema, name: name)
   end
 
   def to_map(region_schema) do
     map = Map.from_struct(region_schema)
-    %{map | iid: IID.parse(map.iid)}
+    %{map | name: ProcessName.parse(map.name)}
   end
 end

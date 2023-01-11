@@ -1,5 +1,5 @@
 defmodule Arcade do
   @moduledoc false
 
-  use Boundary, exports: [HordeRegistry, IID, Repo]
+  use Boundary, exports: [DynamicSupervisor, Registry, ProcessName, Repo]
 end

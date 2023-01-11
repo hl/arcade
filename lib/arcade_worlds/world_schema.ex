@@ -5,14 +5,13 @@ defmodule ArcadeWorlds.WorldSchema do
 
   use Ecto.Schema
 
-  alias Arcade.IID
+  alias Arcade.ProcessName
   alias Arcade.Repo
   alias ArcadeWorlds.WorldSchema
 
   import Ecto.Changeset
 
   schema "worlds" do
-    field :iid
     field :name
     field :map
     field :regions, {:array, :string}
@@ -21,21 +20,21 @@ defmodule ArcadeWorlds.WorldSchema do
 
   def save(struct, params) do
     struct
-    |> cast(params, ~w/iid name map regions/a)
-    |> validate_required(~w/iid name/a)
+    |> cast(params, ~w/name map regions/a)
+    |> validate_required(~w/name/a)
     |> Repo.insert_or_update!()
   end
 
-  def get_by_iid(iid) when is_tuple(iid) do
-    iid |> IID.serialize() |> get_by_iid()
+  def get_by_name(name) when is_tuple(name) do
+    name |> ProcessName.serialize() |> get_by_name()
   end
 
-  def get_by_iid(iid) when is_binary(iid) do
-    Repo.get_by(WorldSchema, iid: iid)
+  def get_by_name(name) when is_binary(name) do
+    Repo.get_by(WorldSchema, name: name)
   end
 
   def to_map(world_schema) do
     map = Map.from_struct(world_schema)
-    %{map | iid: IID.serialize(map.iid)}
+    %{map | name: ProcessName.serialize(map.name)}
   end
 end

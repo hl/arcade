@@ -7,18 +7,17 @@ defmodule ArcadeRegions.RegionProcess do
 
   require Logger
 
-  alias Arcade.HordeRegistry
-  alias Arcade.IID
+  alias Arcade.ProcessName
   alias ArcadeRegions.RegionProcess
   alias ArcadeRegions.RegionState
 
   # Client
 
   def child_spec(args) do
-    iid = args |> Keyword.fetch!(:iid) |> IID.serialize()
+    name = args |> Keyword.fetch!(:name) |> ProcessName.serialize()
 
     %{
-      id: "#{RegionProcess}_#{iid}",
+      id: "#{RegionProcess}_#{name}",
       start: {RegionProcess, :start_link, [args]},
       shutdown: 10_000,
       restart: :transient
@@ -26,9 +25,9 @@ defmodule ArcadeRegions.RegionProcess do
   end
 
   def start_link(args) do
-    iid = Keyword.fetch!(args, :iid)
+    name = Keyword.fetch!(args, :name)
 
-    case GenServer.start_link(RegionProcess, args, name: HordeRegistry.via_tuple(iid)) do
+    case GenServer.start_link(RegionProcess, args, name: Arcade.Registry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -38,24 +37,34 @@ defmodule ArcadeRegions.RegionProcess do
     end
   end
 
+  def get_coordinates(server) do
+    GenServer.call(server, :get_coordinates)
+  end
+
   # Server (callbacks)
 
   @impl GenServer
   def init(args) do
     Process.flag(:trap_exit, true)
 
-    iid = Keyword.fetch!(args, :iid)
-    world_iid = Keyword.fetch!(args, :world_iid)
+    name = Keyword.fetch!(args, :name)
+    world_name = Keyword.fetch!(args, :world_name)
 
-    ArcadeWorlds.register_region(world_iid, iid)
+    ArcadeWorlds.register_region(world_name, name)
 
     {:ok, args, {:continue, :initial_setup}}
   end
 
   @impl GenServer
+  def handle_call(:get_coordinates, _from, state) do
+    coordinates = RegionState.get_coordinates(state)
+    {:reply, coordinates, state}
+  end
+
+  @impl GenServer
   def handle_continue(:initial_setup, args) do
-    iid = Keyword.fetch!(args, :iid)
-    state = RegionState.load_state(iid, args)
+    name = Keyword.fetch!(args, :name)
+    state = RegionState.load_state(name, args)
 
     {:noreply, state}
   end
@@ -64,7 +73,7 @@ defmodule ArcadeRegions.RegionProcess do
   def terminate(reason, state) do
     Logger.info(inspect(reason))
     RegionState.save_state(state)
-    ArcadeWorlds.unregister_region(state.world_iid, state.iid)
+    ArcadeWorlds.unregister_region(state.world_name, state.name)
 
     reason
   end

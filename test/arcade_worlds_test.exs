@@ -1,13 +1,12 @@
 defmodule ArcadeWorldsTest do
-  alias Arcade.HordeRegistry
-  use Arcade.HordeCase
+  use ExUnit.Case
 
   describe "World.start_child/1" do
     test "start a new supervised world" do
-      {:ok, pid} = ArcadeWorlds.start_child("world")
-      world_iid = HordeRegistry.get_key(pid)
+      {:ok, pid} = ArcadeWorlds.start_child("test-world")
+      world_name = Arcade.Registry.get_name(pid)
 
-      assert {:world, name, num} = world_iid
+      assert {:world, name, num} = world_name
       assert is_binary(name)
       assert is_integer(num)
     end
@@ -15,16 +14,16 @@ defmodule ArcadeWorldsTest do
 
   describe "World.set_map/2" do
     setup do
-      world_name = "world"
+      world_name = "test-world"
       {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_iid = HordeRegistry.get_key(pid)
+      world_name = Arcade.Registry.get_name(pid)
 
-      [world_iid: world_iid]
+      [world_name: world_name]
     end
 
-    test "set a map for a world process", %{world_iid: world_iid} do
-      map_name = "map"
-      assert :ok = ArcadeWorlds.set_map(world_iid, map_name)
+    test "set a map for a world process", %{world_name: world_name} do
+      map_name = "test-map"
+      assert :ok = ArcadeWorlds.set_map(world_name, map_name)
     end
   end
 
@@ -32,16 +31,16 @@ defmodule ArcadeWorldsTest do
     setup do
       world_name = "world"
       {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_iid = HordeRegistry.get_key(pid)
+      world_name = Arcade.Registry.get_name(pid)
 
-      [world_iid: world_iid]
+      [world_name: world_name]
     end
 
-    test "get a map for a world process", %{world_iid: world_iid} do
-      map_name = "map"
-      ArcadeWorlds.set_map(world_iid, map_name)
+    test "get a map for a world process", %{world_name: world_name} do
+      map_name = "test-map"
+      ArcadeWorlds.set_map(world_name, map_name)
 
-      assert match?(^map_name, ArcadeWorlds.get_map(world_iid))
+      assert match?(^map_name, ArcadeWorlds.get_map(world_name))
     end
   end
 end

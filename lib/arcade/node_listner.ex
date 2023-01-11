@@ -43,6 +43,6 @@ defmodule Arcade.NodeListener do
   end
 
   def horde do
-    [Arcade.HordeRegistry | Application.get_env(:arcade, :horde)]
+    [Arcade.Registry | Application.get_env(:arcade, :horde)]
   end
 end

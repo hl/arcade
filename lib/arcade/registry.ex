@@ -1,4 +1,4 @@
-defmodule Arcade.HordeRegistry do
+defmodule Arcade.Registry do
   @moduledoc """
   The Registry is responsible for ...
   """
@@ -9,27 +9,27 @@ defmodule Arcade.HordeRegistry do
   # Client
 
   def start_link(_) do
-    Horde.Registry.start_link(Arcade.HordeRegistry, [keys: :unique], name: Arcade.HordeRegistry)
+    Horde.Registry.start_link(Arcade.Registry, [keys: :unique], name: Arcade.Registry)
   end
 
-  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.HordeRegistry, name}}
+  def via_tuple(name), do: {:via, Horde.Registry, {Arcade.Registry, name}}
 
   def whereis_name(name) do
-    Horde.Registry.whereis_name({Arcade.HordeRegistry, name})
+    Horde.Registry.whereis_name({Arcade.Registry, name})
   end
 
-  def get_key(pid) do
-    case Horde.Registry.keys(Arcade.HordeRegistry, pid) do
+  def get_name(pid) do
+    case Horde.Registry.keys(Arcade.Registry, pid) do
       [key] -> key
       _empty -> nil
     end
   end
 
   def select(spec) do
-    Horde.Registry.select(Arcade.HordeRegistry, spec)
+    Horde.Registry.select(Arcade.Registry, spec)
   end
 
-  def next_key(type, name) do
+  def next_index(type, name) do
     case select([{{{type, name, :"$1"}, :_, :_}, [], [:"$1"]}]) do
       [] -> 1
       list -> Enum.max(list) + 1
@@ -38,7 +38,7 @@ defmodule Arcade.HordeRegistry do
 
   @doc false
   def members do
-    Enum.map([Node.self() | Node.list()], &{Arcade.HordeRegistry, &1})
+    Enum.map([Node.self() | Node.list()], &{Arcade.Registry, &1})
   end
 
   # Server (callbacks)

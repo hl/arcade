@@ -12,7 +12,7 @@ defmodule ArcadeApp do
       List.flatten([
         {Cluster.Supervisor, [topologies(), [name: Arcade.ClusterSupervisor]]},
         Arcade.Repo,
-        Arcade.HordeRegistry,
+        Arcade.Registry,
         horde(),
         Arcade.NodeListener
       ])
