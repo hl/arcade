@@ -14,14 +14,17 @@ defmodule ArcadeRegions.RegionSchema do
   schema "regions" do
     field :name
     field :world_name
-    field :coordinates, :decimal
+
+    embeds_one :coordinates, ArcadeRegions.CoordinatesSchema, on_replace: :delete
+
     timestamps()
   end
 
   def save(struct, params) do
     struct
-    |> cast(params, ~w/name name world_name coordinates/a)
-    |> validate_required(~w/name name world_name coordinates/a)
+    |> cast(params, ~w/name name world_name/a)
+    |> cast_embed(:coordinates)
+    |> validate_required(~w/name name world_name/a)
     |> Repo.insert_or_update!()
   end
 
