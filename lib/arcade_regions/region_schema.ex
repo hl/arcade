@@ -15,14 +15,14 @@ defmodule ArcadeRegions.RegionSchema do
     field :name
     field :world_name
 
-    embeds_one :coordinates, ArcadeRegions.CoordinatesSchema, on_replace: :delete
+    embeds_one :coordinates, ArcadeRegions.CoordinateSchema, on_replace: :delete
 
     timestamps()
   end
 
-  def save(struct, params) do
+  def save(%RegionSchema{} = struct, attrs) do
     struct
-    |> cast(params, ~w/name name world_name/a)
+    |> cast(attrs, ~w/name name world_name/a)
     |> cast_embed(:coordinates)
     |> validate_required(~w/name name world_name/a)
     |> Repo.insert_or_update!()
@@ -34,10 +34,5 @@ defmodule ArcadeRegions.RegionSchema do
 
   def get_by_name(name) when is_binary(name) do
     Repo.get_by(RegionSchema, name: name)
-  end
-
-  def to_map(region_schema) do
-    map = Map.from_struct(region_schema)
-    %{map | name: ProcessName.parse(map.name)}
   end
 end

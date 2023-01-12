@@ -68,7 +68,7 @@ defmodule ArcadeWorlds.WorldProcess do
   @impl GenServer
   def handle_continue(:load_state, args) do
     name = Keyword.fetch!(args, :name)
-    state = WorldState.load_state(name)
+    state = WorldState.load_state(name, args)
 
     {:noreply, state}
   end

@@ -3,6 +3,7 @@ defmodule ArcadeWorlds.WorldState do
   The World state is responsible for ...
   """
 
+  alias Arcade.ProcessName
   alias ArcadeWorlds.WorldSchema
   alias ArcadeWorlds.WorldState
 
@@ -17,43 +18,40 @@ defmodule ArcadeWorlds.WorldState do
   end
 
   def save_state(%WorldState{} = state) do
-    params = to_map(state)
-    struct = WorldSchema.get_by_name(state.name) || %WorldSchema{}
+    map = Map.from_struct(state)
+    name = ProcessName.serialize(map.name)
+    regions = get_regions(state)
+    attrs = %{map | name: name, regions: regions}
+    schema = WorldSchema.get_by_name(state.name) || %WorldSchema{}
 
-    WorldSchema.save(struct, params)
+    WorldSchema.save(schema, attrs)
   end
 
-  def load_state(name) do
-    case WorldSchema.get_by_name(name) do
-      nil -> %WorldState{name: name}
-      world_schema -> struct!(WorldState, WorldSchema.to_map(world_schema))
-    end
-  end
+  def load_state(name, args) when is_tuple(name) do
+    attrs =
+      case WorldSchema.get_by_name(name) do
+        nil ->
+          args
 
-  def to_map(%WorldState{} = world_state) do
-    world_state
-    |> Map.from_struct()
-    |> serialize_regions()
-  end
-
-  def serialize_regions(map) do
-    regions =
-      case map do
-        %{regions: [] = regions} -> regions
-        %{regions: regions} -> MapSet.to_list(regions)
+        world_schema ->
+          %{
+            Map.from_struct(world_schema)
+            | name: ProcessName.parse(world_schema.name),
+              regions: MapSet.new(world_schema.regions, &ProcessName.parse/1)
+          }
       end
 
-    %{map | regions: regions}
+    struct!(WorldState, attrs)
   end
 
-  def register_region(%WorldState{} = state, region_name) do
+  def register_region(%WorldState{} = state, region_name) when is_tuple(region_name) do
     case state do
       %{regions: []} -> %{state | regions: MapSet.new([region_name])}
       %{regions: regions} -> %{state | regions: MapSet.put(regions, region_name)}
     end
   end
 
-  def unregister_region(%WorldState{} = state, region_name) do
+  def unregister_region(%WorldState{} = state, region_name) when is_tuple(region_name) do
     %{state | regions: MapSet.delete(state.regions, region_name)}
   end
 

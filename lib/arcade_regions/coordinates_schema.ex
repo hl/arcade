@@ -1,4 +1,4 @@
-defmodule ArcadeRegions.CoordinatesSchema do
+defmodule ArcadeRegions.CoordinateSchema do
   use Ecto.Schema
 
   import Ecto.Changeset
