@@ -4,13 +4,14 @@ defmodule ArcadeRegions.RegionState do
   """
 
   alias Arcade.ProcessName
+  alias Arcade.Utils
   alias ArcadeRegions.RegionSchema
   alias ArcadeRegions.RegionState
 
   defstruct [:name, :world_name, :coordinates]
 
   def save_state(%RegionState{} = state) do
-    map = Map.from_struct(state)
+    map = Utils.struct_to_map(state)
 
     attrs = %{
       map
@@ -30,7 +31,7 @@ defmodule ArcadeRegions.RegionState do
           args
 
         region_schema ->
-          map = Map.from_struct(region_schema)
+          map = Utils.struct_to_map(region_schema)
 
           %{
             map
@@ -39,7 +40,7 @@ defmodule ArcadeRegions.RegionState do
           }
       end
 
-    struct!(RegionState, attrs)
+    struct(RegionState, attrs)
   end
 
   def get_coordinates(%RegionState{coordinates: coordinates}) do

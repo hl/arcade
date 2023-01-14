@@ -4,6 +4,7 @@ defmodule ArcadeWorlds.WorldState do
   """
 
   alias Arcade.ProcessName
+  alias Arcade.Utils
   alias ArcadeWorlds.WorldSchema
   alias ArcadeWorlds.WorldState
 
@@ -18,7 +19,7 @@ defmodule ArcadeWorlds.WorldState do
   end
 
   def save_state(%WorldState{} = state) do
-    map = Map.from_struct(state)
+    map = Utils.struct_to_map(state)
     name = ProcessName.serialize(map.name)
     regions = get_regions(state)
     attrs = %{map | name: name, regions: regions}
@@ -35,13 +36,13 @@ defmodule ArcadeWorlds.WorldState do
 
         world_schema ->
           %{
-            Map.from_struct(world_schema)
+            Utils.struct_to_map(world_schema)
             | name: ProcessName.parse(world_schema.name),
               regions: MapSet.new(world_schema.regions, &ProcessName.parse/1)
           }
       end
 
-    struct!(WorldState, attrs)
+    struct(WorldState, attrs)
   end
 
   def register_region(%WorldState{} = state, region_name) when is_tuple(region_name) do
