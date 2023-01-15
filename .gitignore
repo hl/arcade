@@ -27,3 +27,6 @@ arcade-*.tar
 
 # Database
 data/
+
+# Elixir LS
+.elixir-ls/
