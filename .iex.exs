@@ -1,5 +1,9 @@
-{:ok, world_pid} = ArcadeWorlds.start_child("test", [map: "test-map-1"])
-world_name = Arcade.Registry.get_name(world_pid)
+generate_world = fn name ->
+  {:ok, world_pid} = ArcadeWorlds.start_child(name, [map: "#{name}-map-1"])
+  Arcade.Registry.get_name(world_pid)
+end
 
-{:ok, island_pid} = ArcadeIslands.start_child("test", world_name, 0, 0)
-island_name = Arcade.Registry.get_name(island_pid)
+generate_island = fn name, world_name, x, y ->
+  {:ok, island_pid} = ArcadeIslands.start_child(name, world_name, x, y)
+  Arcade.Registry.get_name(island_pid)
+end

@@ -30,7 +30,7 @@ defmodule ArcadeWorlds.WorldState do
   def save_state(%WorldState{} = state) do
     map = Utils.struct_to_map(state)
     name = ProcessName.serialize(map.name)
-    islands = get_islands(state)
+    islands = Enum.map(get_islands(state), &ProcessName.serialize/1)
     attrs = %{map | name: name, islands: islands}
     schema = WorldSchema.get_by_name(state.name) || %WorldSchema{}
 

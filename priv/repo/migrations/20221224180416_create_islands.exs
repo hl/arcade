@@ -5,7 +5,7 @@ defmodule Arcade.Repo.Migrations.CreateIslands do
     create table(:islands) do
       add :name, :string, null: false
       add :world_name, :string, null: false
-      add :coordinates, :decimal
+      add :coordinates, :map
       timestamps()
     end
 

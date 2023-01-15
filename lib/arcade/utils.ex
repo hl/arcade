@@ -7,6 +7,7 @@ defmodule Arcade.Utils do
     |> Map.from_struct()
     |> Map.delete(:__meta__)
     |> Map.new(fn
+      {k, %MapSet{} = v} -> {k, MapSet.to_list(v)}
       {k, v} when is_struct(v) -> {k, struct_to_map(v)}
       {k, [e | _] = v} when is_struct(e) -> {k, Enum.map(v, &struct_to_map/1)}
       {k, v} -> {k, v}
