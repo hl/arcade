@@ -10,6 +10,7 @@ defmodule Arcade.NodeListener do
 
   # Client
 
+  @spec start_link(Keyword.t()) :: GenServer.on_start()
   def start_link(_), do: GenServer.start_link(NodeListener, [])
 
   @doc false
@@ -42,6 +43,7 @@ defmodule Arcade.NodeListener do
     {:noreply, state}
   end
 
+  @spec horde() :: [module()]
   def horde do
     [Arcade.Registry | Application.get_env(:arcade, :horde)]
   end

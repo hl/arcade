@@ -1,5 +1,8 @@
 defmodule Arcade.Utils do
-  def struct_to_map(struct) when is_struct(struct) or is_atom(struct) do
+  @moduledoc false
+
+  @spec struct_to_map(struct()) :: %{atom() => term()}
+  def struct_to_map(struct) when is_struct(struct) do
     struct
     |> Map.from_struct()
     |> Map.delete(:__meta__)

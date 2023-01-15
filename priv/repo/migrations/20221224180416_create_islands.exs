@@ -1,14 +1,14 @@
-defmodule Arcade.Repo.Migrations.CreateRegions do
+defmodule Arcade.Repo.Migrations.CreateIslands do
   use Ecto.Migration
 
   def change do
-    create table(:regions) do
+    create table(:islands) do
       add :name, :string, null: false
       add :world_name, :string, null: false
       add :coordinates, :decimal
       timestamps()
     end
 
-    create unique_index(:regions, [:name, :coordinates])
+    create unique_index(:islands, [:name, :coordinates])
   end
 end

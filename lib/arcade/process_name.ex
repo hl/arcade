@@ -1,21 +1,33 @@
 defmodule Arcade.ProcessName do
-  @divider "/"
+  @moduledoc """
+  The ProcessName is responsible for ...
+  """
 
-  def serialize(name) do
+  @type name :: ArcadeWorlds.name() | ArcadeIslands.name()
+
+  @separator "/"
+
+  @spec serialize(name) :: String.t()
+  def serialize(name) when is_tuple(name) do
     name
     |> Tuple.to_list()
-    |> Enum.map(&to_string/1)
-    |> Enum.join(@divider)
+    |> Enum.map_join(@separator, &to_string/1)
   end
 
+  @spec parse(String.t()) :: name
   def parse(name) do
     name
-    |> String.split(@divider)
+    |> String.split(@separator)
     |> Enum.reduce({[], 0}, &parse_item(&1, &2))
     |> then(&elem(&1, 0))
     |> Enum.reverse()
     |> List.to_tuple()
   end
+
+  @doc false
+  @spec parse_item(item, {[item], non_neg_integer()}) :: {[item], non_neg_integer()}
+        when item: atom() | String.t() | non_neg_integer()
+  def parse_item(item, acc)
 
   def parse_item(item, {list, 0}) do
     item = String.to_existing_atom(item)

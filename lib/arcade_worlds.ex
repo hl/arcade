@@ -8,41 +8,50 @@ defmodule ArcadeWorlds do
   alias ArcadeWorlds.WorldDynamicSupervisor
   alias ArcadeWorlds.WorldProcess
 
+  @type name :: {:world, String.t()}
+
   @registry_type :world
 
-  def start_child(name) when is_binary(name) do
-    [name: {@registry_type, name}]
+  @spec start_child(String.t(), Keyword.t()) :: DynamicSupervisor.on_start_child()
+  def start_child(name, attrs \\ []) when is_binary(name) do
+    attrs
+    |> Keyword.put(:name, {@registry_type, name})
     |> WorldProcess.child_spec()
     |> WorldDynamicSupervisor.start_child()
   end
 
+  @spec set_map(name, String.t()) :: :ok
   def set_map(name, map) do
     name
     |> Arcade.Registry.whereis_name()
     |> WorldProcess.set_map(map)
   end
 
+  @spec register_island(name, ArcadeIslands.name()) :: :ok
+  def register_island(name, island_name) do
+    name
+    |> Arcade.Registry.whereis_name()
+    |> WorldProcess.register_island(island_name)
+  end
+
+  @spec unregister_island(name, ArcadeIslands.name()) :: :ok
+  def unregister_island(name, island_name) do
+    name
+    |> Arcade.Registry.whereis_name()
+    |> WorldProcess.unregister_island(island_name)
+  end
+
+  @spec get_map(name) :: String.t() | nil
   def get_map(name) do
     name
     |> Arcade.Registry.whereis_name()
     |> WorldProcess.get_map()
   end
 
-  def register_region(name, region_name) do
+  @spec get_islands(name) :: [ArcadeIslands.name()]
+  def get_islands(name) do
     name
     |> Arcade.Registry.whereis_name()
-    |> WorldProcess.register_region(region_name)
-  end
-
-  def unregister_region(name, region_name) do
-    name
-    |> Arcade.Registry.whereis_name()
-    |> WorldProcess.unregister_region(region_name)
-  end
-
-  def get_regions(name) do
-    name
-    |> Arcade.Registry.whereis_name()
-    |> WorldProcess.get_regions()
+    |> WorldProcess.get_islands()
   end
 end

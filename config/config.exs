@@ -12,7 +12,7 @@ config :arcade,
   ecto_repos: [Arcade.Repo],
   horde: [
     ArcadeWorlds.WorldDynamicSupervisor,
-    ArcadeRegions.RegionDynamicSupervisor
+    ArcadeIslands.IslandDynamicSupervisor
   ]
 
 import_config "#{config_env()}.exs"

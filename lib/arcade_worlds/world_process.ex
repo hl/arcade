@@ -13,6 +13,7 @@ defmodule ArcadeWorlds.WorldProcess do
 
   # Client
 
+  @spec child_spec(Keyword.t()) :: Supervisor.child_spec()
   def child_spec(args) do
     name = args |> Keyword.fetch!(:name) |> ProcessName.serialize()
 
@@ -24,6 +25,7 @@ defmodule ArcadeWorlds.WorldProcess do
     }
   end
 
+  @spec start_link(Keyword.t()) :: Supervisor.on_start()
   def start_link(args) do
     name = Keyword.fetch!(args, :name)
 
@@ -37,24 +39,29 @@ defmodule ArcadeWorlds.WorldProcess do
     end
   end
 
+  @spec set_map(pid(), String.t()) :: :ok
   def set_map(server, map) do
     GenServer.cast(server, {:set_map, map})
   end
 
+  @spec register_island(pid(), ArcadeIslands.name()) :: :ok
+  def register_island(server, island_name) do
+    GenServer.cast(server, {:register_island, island_name})
+  end
+
+  @spec unregister_island(pid(), ArcadeIslands.name()) :: :ok
+  def unregister_island(server, island_name) do
+    GenServer.cast(server, {:unregister_island, island_name})
+  end
+
+  @spec get_map(pid()) :: String.t() | nil
   def get_map(server) do
     GenServer.call(server, :get_map)
   end
 
-  def register_region(server, region_name) do
-    GenServer.cast(server, {:register_region, region_name})
-  end
-
-  def unregister_region(server, region_name) do
-    GenServer.cast(server, {:unregister_region, region_name})
-  end
-
-  def get_regions(server) do
-    GenServer.call(server, :get_regions)
+  @spec get_islands(pid()) :: [ArcadeIslands.name()]
+  def get_islands(server) do
+    GenServer.call(server, :get_islands)
   end
 
   # Server (callbacks)
@@ -80,8 +87,8 @@ defmodule ArcadeWorlds.WorldProcess do
   end
 
   @impl GenServer
-  def handle_call(:get_regions, _from, state) do
-    map = WorldState.get_regions(state)
+  def handle_call(:get_islands, _from, state) do
+    map = WorldState.get_islands(state)
     {:reply, map, state}
   end
 
@@ -92,14 +99,14 @@ defmodule ArcadeWorlds.WorldProcess do
   end
 
   @impl GenServer
-  def handle_cast({:register_region, region_name}, state) do
-    state = WorldState.register_region(state, region_name)
+  def handle_cast({:register_island, island_name}, state) do
+    state = WorldState.register_island(state, island_name)
     {:noreply, state}
   end
 
   @impl GenServer
-  def handle_cast({:unregister_region, region_name}, state) do
-    state = WorldState.unregister_region(state, region_name)
+  def handle_cast({:unregister_island, island_name}, state) do
+    state = WorldState.unregister_island(state, island_name)
     {:noreply, state}
   end
 

@@ -12,12 +12,15 @@ defmodule Arcade.Registry do
     Horde.Registry.start_link(Arcade.Registry, [keys: :unique], name: Arcade.Registry)
   end
 
+  @spec via_tuple(name) :: {:via, module(), {module(), name}} when name: tuple()
   def via_tuple(name), do: {:via, Horde.Registry, {Arcade.Registry, name}}
 
+  @spec whereis_name(tuple()) :: pid() | :undefined
   def whereis_name(name) do
     Horde.Registry.whereis_name({Arcade.Registry, name})
   end
 
+  @spec get_name(pid()) :: tuple() | nil
   def get_name(pid) do
     case Horde.Registry.keys(Arcade.Registry, pid) do
       [key] -> key
@@ -25,7 +28,7 @@ defmodule Arcade.Registry do
     end
   end
 
-  @doc false
+  @spec members() :: [{module(), String.t()}]
   def members do
     Enum.map([Node.self() | Node.list()], &{Arcade.Registry, &1})
   end
