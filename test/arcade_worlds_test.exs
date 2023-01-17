@@ -1,27 +1,17 @@
 defmodule ArcadeWorldsTest do
-  use ExUnit.Case
+  use ArcadeTest.ProcessCase
 
-  def random_name(prefix), do: "#{prefix}-#{Ecto.UUID.generate()}"
+  describe "ArcadeWorlds.start_child/1" do
+    setup [:setup_world]
 
-  describe "World.start_child/1" do
-    test "start a new supervised world" do
-      world_name = random_name("test-world")
-      {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_name = Arcade.Registry.get_name(pid)
-
+    test "start a new supervised world", %{world_name: world_name} do
       assert {:world, name} = world_name
       assert is_binary(name)
     end
   end
 
-  describe "World.set_map/2" do
-    setup do
-      world_name = random_name("test-world")
-      {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_name = Arcade.Registry.get_name(pid)
-
-      [world_name: world_name]
-    end
+  describe "ArcadeWorlds.set_map/2" do
+    setup [:setup_world]
 
     test "set a map for a world process", %{world_name: world_name} do
       map_name = random_name("test-map")
@@ -29,14 +19,8 @@ defmodule ArcadeWorldsTest do
     end
   end
 
-  describe "World.get_map/1" do
-    setup do
-      world_name = random_name("test-world")
-      {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_name = Arcade.Registry.get_name(pid)
-
-      [world_name: world_name]
-    end
+  describe "ArcadeWorlds.get_map/1" do
+    setup [:setup_world]
 
     test "get a map for a world process", %{world_name: world_name} do
       map_name = random_name("test-map")

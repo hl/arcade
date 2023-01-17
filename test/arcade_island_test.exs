@@ -1,16 +1,8 @@
 defmodule ArcadeIslandsTest do
-  use ExUnit.Case
-
-  def random_name(prefix), do: "#{prefix}-#{Ecto.UUID.generate()}"
+  use ArcadeTest.ProcessCase
 
   describe("Island.start_child/2") do
-    setup do
-      world_name = random_name("test-world")
-      {:ok, pid} = ArcadeWorlds.start_child(world_name)
-      world_name = Arcade.Registry.get_name(pid)
-
-      [world_name: world_name]
-    end
+    setup [:setup_world]
 
     test "start a new supervised island", %{world_name: world_name} do
       island_name = random_name("test-island")
