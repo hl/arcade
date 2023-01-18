@@ -2,39 +2,52 @@ name: Elixir CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  setup_env:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: paulo-ferraz-oliveira/parse-tool-versions@v1
+        id: tool-versions
+    outputs:
+      ELIXIR_VERSION: ${{ steps.tool-versions.outputs.elixir }}
+      ERLANG_VERSION: ${{ steps.tool-versions.outputs.erlang }}
 
+  build:
+    needs:
+      - setup_env
     name: Build and test
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Elixir
-      uses: erlef/setup-beam@v1.15.2
-      with:
-        elixir-version: '1.14.3'
-        otp-version: '25.2' # Define the OTP version [required]
-    - name: Restore dependencies cache
-      uses: actions/cache@v3
-      with:
-        path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
-    - name: Install dependencies
-      run: mix deps.get
-    - name: Run migrations
-      run: MIX_ENV=test mix do ecto.drop, ecto.create, ecto.migrate
-    - name: Run tests
-      run: mix test
-    - name: Run credo
-      run: mix credo --strict
-    - name: Run dialyzer
-      run: mix dialyzer
+      - uses: actions/checkout@v3
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ needs.setup_env.outputs.ELIXIR_VERSION }}
+          otp-version: ${{ needs.setup_env.outputs.ERLANG_VERSION }}
+      - name: Restore dependencies cache
+        uses: actions/cache@v3
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Install dependencies
+        run: mix deps.get
+      - name: Run migrations
+        env:
+          MIX_ENV: test
+        run: mix do ecto.drop, ecto.create, ecto.migrate
+      - name: Run tests
+        run: mix test
+      - name: Run credo
+        run: mix credo --strict
+      - name: Run dialyzer
+        run: mix dialyzer
