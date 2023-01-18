@@ -1,6 +1,6 @@
-defmodule ArcadeIslands.IslandProcess do
+defmodule ArcadeZones.ZoneProcess do
   @moduledoc """
-  The Island process is responsible for ...
+  The Zone process is responsible for ...
   """
 
   use GenServer
@@ -8,8 +8,8 @@ defmodule ArcadeIslands.IslandProcess do
   require Logger
 
   alias Arcade.ProcessName
-  alias ArcadeIslands.IslandProcess
-  alias ArcadeIslands.IslandState
+  alias ArcadeZones.ZoneProcess
+  alias ArcadeZones.ZoneState
 
   # Client
 
@@ -18,8 +18,8 @@ defmodule ArcadeIslands.IslandProcess do
     name = args |> Keyword.fetch!(:name) |> ProcessName.serialize()
 
     %{
-      id: "#{IslandProcess}_#{name}",
-      start: {IslandProcess, :start_link, [args]},
+      id: "#{ZoneProcess}_#{name}",
+      start: {ZoneProcess, :start_link, [args]},
       shutdown: 10_000,
       restart: :transient
     }
@@ -29,7 +29,7 @@ defmodule ArcadeIslands.IslandProcess do
   def start_link(args) do
     name = Keyword.fetch!(args, :name)
 
-    case GenServer.start_link(IslandProcess, args, name: Arcade.Registry.via_tuple(name)) do
+    case GenServer.start_link(ZoneProcess, args, name: Arcade.Registry.via_tuple(name)) do
       {:ok, pid} ->
         {:ok, pid}
 
@@ -53,21 +53,21 @@ defmodule ArcadeIslands.IslandProcess do
     name = Keyword.fetch!(args, :name)
     world_name = Keyword.fetch!(args, :world_name)
 
-    ArcadeWorlds.register_island(world_name, name)
+    ArcadeWorlds.register_zone(world_name, name)
 
     {:ok, args, {:continue, :initial_setup}}
   end
 
   @impl GenServer
   def handle_call(:get_coordinates, _from, state) do
-    coordinates = IslandState.get_coordinates(state)
+    coordinates = ZoneState.get_coordinates(state)
     {:reply, coordinates, state}
   end
 
   @impl GenServer
   def handle_continue(:initial_setup, args) do
     name = Keyword.fetch!(args, :name)
-    state = IslandState.load_state(name, args)
+    state = ZoneState.load_state(name, args)
 
     {:noreply, state}
   end
@@ -75,8 +75,8 @@ defmodule ArcadeIslands.IslandProcess do
   @impl GenServer
   def terminate(reason, state) do
     Logger.info(inspect(reason))
-    IslandState.save_state(state)
-    ArcadeWorlds.unregister_island(state.world_name, state.name)
+    ZoneState.save_state(state)
+    ArcadeWorlds.unregister_zone(state.world_name, state.name)
 
     reason
   end

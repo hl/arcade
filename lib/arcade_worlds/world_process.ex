@@ -44,14 +44,14 @@ defmodule ArcadeWorlds.WorldProcess do
     GenServer.cast(server, {:set_map, map})
   end
 
-  @spec register_island(pid(), ArcadeIslands.name()) :: :ok
-  def register_island(server, island_name) do
-    GenServer.cast(server, {:register_island, island_name})
+  @spec register_zone(pid(), ArcadeZones.name()) :: :ok
+  def register_zone(server, zone_name) do
+    GenServer.cast(server, {:register_zone, zone_name})
   end
 
-  @spec unregister_island(pid(), ArcadeIslands.name()) :: :ok
-  def unregister_island(server, island_name) do
-    GenServer.cast(server, {:unregister_island, island_name})
+  @spec unregister_zone(pid(), ArcadeZones.name()) :: :ok
+  def unregister_zone(server, zone_name) do
+    GenServer.cast(server, {:unregister_zone, zone_name})
   end
 
   @spec get_map(pid()) :: String.t() | nil
@@ -59,9 +59,9 @@ defmodule ArcadeWorlds.WorldProcess do
     GenServer.call(server, :get_map)
   end
 
-  @spec get_islands(pid()) :: [ArcadeIslands.name()]
-  def get_islands(server) do
-    GenServer.call(server, :get_islands)
+  @spec get_zones(pid()) :: [ArcadeZones.name()]
+  def get_zones(server) do
+    GenServer.call(server, :get_zones)
   end
 
   # Server (callbacks)
@@ -87,8 +87,8 @@ defmodule ArcadeWorlds.WorldProcess do
   end
 
   @impl GenServer
-  def handle_call(:get_islands, _from, state) do
-    map = WorldState.get_islands(state)
+  def handle_call(:get_zones, _from, state) do
+    map = WorldState.get_zones(state)
     {:reply, map, state}
   end
 
@@ -99,14 +99,14 @@ defmodule ArcadeWorlds.WorldProcess do
   end
 
   @impl GenServer
-  def handle_cast({:register_island, island_name}, state) do
-    state = WorldState.register_island(state, island_name)
+  def handle_cast({:register_zone, zone_name}, state) do
+    state = WorldState.register_zone(state, zone_name)
     {:noreply, state}
   end
 
   @impl GenServer
-  def handle_cast({:unregister_island, island_name}, state) do
-    state = WorldState.unregister_island(state, island_name)
+  def handle_cast({:unregister_zone, zone_name}, state) do
+    state = WorldState.unregister_zone(state, zone_name)
     {:noreply, state}
   end
 

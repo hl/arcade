@@ -1,18 +1,18 @@
-defmodule ArcadeIslands.IslandState do
+defmodule ArcadeZones.ZoneState do
   @moduledoc """
-  The Island state is responsible for ...
+  The Zone state is responsible for ...
   """
 
   alias Arcade.ProcessName
   alias Arcade.Utils
-  alias ArcadeIslands.IslandSchema
-  alias ArcadeIslands.IslandState
   alias ArcadeWorlds
+  alias ArcadeZones.ZoneSchema
+  alias ArcadeZones.ZoneState
 
   defstruct [:name, :world_name, :coordinates]
 
   @type t :: %__MODULE__{
-          name: ArcadeIslands.name() | nil,
+          name: ArcadeZones.name() | nil,
           world_name: ArcadeWorlds.name() | nil,
           coordinates: coordinates
         }
@@ -22,8 +22,8 @@ defmodule ArcadeIslands.IslandState do
           y: non_neg_integer() | nil
         }
 
-  @spec save_state(t) :: IslandSchema.t() | no_return()
-  def save_state(%IslandState{} = state) do
+  @spec save_state(t) :: ZoneSchema.t() | no_return()
+  def save_state(%ZoneState{} = state) do
     map = Utils.struct_to_map(state)
 
     attrs = %{
@@ -32,29 +32,29 @@ defmodule ArcadeIslands.IslandState do
         world_name: ProcessName.serialize(map.world_name)
     }
 
-    struct = IslandSchema.get_by_name(state.name) || %IslandSchema{}
+    struct = ZoneSchema.get_by_name(state.name) || %ZoneSchema{}
 
-    IslandSchema.save!(struct, attrs)
+    ZoneSchema.save!(struct, attrs)
   end
 
-  @spec load_state(ArcadeIslands.name(), Keyword.t()) :: t
+  @spec load_state(ArcadeZones.name(), Keyword.t()) :: t
   def load_state(name, args) when is_tuple(name) do
     attrs =
-      case IslandSchema.get_by_name(name) do
+      case ZoneSchema.get_by_name(name) do
         nil ->
           args
 
-        island_schema ->
-          island_schema
+        zone_schema ->
+          zone_schema
           |> Utils.struct_to_map()
           |> Map.merge(Map.new(args))
       end
 
-    struct(IslandState, attrs)
+    struct(ZoneState, attrs)
   end
 
-  @spec get_coordinates(IslandState.t()) :: coordinates
-  def get_coordinates(%IslandState{coordinates: coordinates}) do
+  @spec get_coordinates(ZoneState.t()) :: coordinates
+  def get_coordinates(%ZoneState{coordinates: coordinates}) do
     coordinates
   end
 end

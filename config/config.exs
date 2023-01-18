@@ -12,7 +12,8 @@ config :arcade,
   ecto_repos: [Arcade.Repo],
   horde: [
     ArcadeWorlds.WorldDynamicSupervisor,
-    ArcadeIslands.IslandDynamicSupervisor
-  ]
+    ArcadeZones.ZoneDynamicSupervisor
+  ],
+  zone_size: 5
 
 import_config "#{config_env()}.exs"

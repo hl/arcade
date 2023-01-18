@@ -15,7 +15,7 @@ defmodule ArcadeWorlds.WorldSchema do
           id: non_neg_integer() | nil,
           name: ArcadeWorlds.name() | nil,
           map: String.t() | nil,
-          islands: [ArcadeIslands.name()],
+          zones: [ArcadeZones.name()],
           inserted_at: NaiveDateTime.t() | nil,
           updated_at: NaiveDateTime.t() | nil
         }
@@ -23,14 +23,14 @@ defmodule ArcadeWorlds.WorldSchema do
   schema "worlds" do
     field :name
     field :map
-    field :islands, {:array, :string}
+    field :zones, {:array, :string}
     timestamps()
   end
 
   @spec save!(t, map()) :: t | no_return()
   def save!(%WorldSchema{} = struct, attrs) do
     struct
-    |> cast(attrs, ~w/name map islands/a)
+    |> cast(attrs, ~w/name map zones/a)
     |> validate_required(~w/name/a)
     |> Repo.insert_or_update!()
   end

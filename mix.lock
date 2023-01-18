@@ -19,6 +19,7 @@
   "libcluster": {:hex, :libcluster, "3.3.1", "e7a4875cd1290cee7a693d6bd46076863e9e433708b01339783de6eff5b7f0aa", [:mix], [{:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}], "hexpm", "b575ca63c1cd84e01f3fa0fc45e6eb945c1ee7ae8d441d33def999075e9e5398"},
   "libring": {:hex, :libring, "1.6.0", "d5dca4bcb1765f862ab59f175b403e356dec493f565670e0bacc4b35e109ce0d", [:mix], [], "hexpm", "5e91ece396af4bce99953d49ee0b02f698cd38326d93cd068361038167484319"},
   "merkle_map": {:hex, :merkle_map, "0.2.1", "01a88c87a6b9fb594c67c17ebaf047ee55ffa34e74297aa583ed87148006c4c8", [:mix], [], "hexpm", "fed4d143a5c8166eee4fa2b49564f3c4eace9cb252f0a82c1613bba905b2d04d"},
+  "puid": {:hex, :puid, "2.0.6", "229413e30292748f379cfeeeebaf7378e49e83888afc5acdea5745ec79ae11f1", [:mix], [], "hexpm", "c36b4c2d49eea5592f7e841804e19c3237eea0afa619a1606d87506184c5b341"},
   "telemetry": {:hex, :telemetry, "1.1.0", "a589817034a27eab11144ad24d5c0f9fab1f58173274b1e9bae7074af9cbee51", [:rebar3], [], "hexpm", "b727b2a1f75614774cff2d7565b64d0dfa5bd52ba517f16543e6fc7efcc0df48"},
   "telemetry_poller": {:hex, :telemetry_poller, "1.0.0", "db91bb424e07f2bb6e73926fcafbfcbcb295f0193e0a00e825e589a0a47e8453", [:rebar3], [{:telemetry, "~> 1.0", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm", "b3a24eafd66c3f42da30fc3ca7dda1e9d546c12250a2d60d7b81d264fbec4f6e"},
 }

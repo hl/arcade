@@ -8,12 +8,12 @@ defmodule ArcadeWorlds.WorldState do
   alias ArcadeWorlds.WorldSchema
   alias ArcadeWorlds.WorldState
 
-  defstruct name: nil, map: nil, islands: MapSet.new()
+  defstruct name: nil, map: nil, zones: MapSet.new()
 
   @type t :: %WorldState{
           name: ArcadeWorlds.name() | nil,
           map: String.t() | nil,
-          islands: MapSet.t(ArcadeIslands.name())
+          zones: MapSet.t(ArcadeZones.name())
         }
 
   @spec set_map(t, String.t()) :: t
@@ -30,8 +30,8 @@ defmodule ArcadeWorlds.WorldState do
   def save_state(%WorldState{} = state) do
     map = Utils.struct_to_map(state)
     name = ProcessName.serialize(map.name)
-    islands = Enum.map(get_islands(state), &ProcessName.serialize/1)
-    attrs = %{map | name: name, islands: islands}
+    zones = Enum.map(get_zones(state), &ProcessName.serialize/1)
+    attrs = %{map | name: name, zones: zones}
     schema = WorldSchema.get_by_name(state.name) || %WorldSchema{}
 
     WorldSchema.save!(schema, attrs)
@@ -48,27 +48,27 @@ defmodule ArcadeWorlds.WorldState do
           world_schema
           |> Utils.struct_to_map()
           |> Map.merge(Map.new(args))
-          |> Map.put(:islands, MapSet.new(world_schema.islands, &ProcessName.parse/1))
+          |> Map.put(:zones, MapSet.new(world_schema.zones, &ProcessName.parse/1))
       end
 
     struct(WorldState, attrs)
   end
 
-  @spec register_island(t, ArcadeIslands.name()) :: t
-  def register_island(%WorldState{} = state, island_name) when is_tuple(island_name) do
+  @spec register_zone(t, ArcadeZones.name()) :: t
+  def register_zone(%WorldState{} = state, zone_name) when is_tuple(zone_name) do
     case state do
-      %{islands: []} -> %{state | islands: MapSet.new([island_name])}
-      %{islands: islands} -> %{state | islands: MapSet.put(islands, island_name)}
+      %{zones: []} -> %{state | zones: MapSet.new([zone_name])}
+      %{zones: zones} -> %{state | zones: MapSet.put(zones, zone_name)}
     end
   end
 
-  @spec unregister_island(t, ArcadeIslands.name()) :: t
-  def unregister_island(%WorldState{} = state, island_name) when is_tuple(island_name) do
-    %{state | islands: MapSet.delete(state.islands, island_name)}
+  @spec unregister_zone(t, ArcadeZones.name()) :: t
+  def unregister_zone(%WorldState{} = state, zone_name) when is_tuple(zone_name) do
+    %{state | zones: MapSet.delete(state.zones, zone_name)}
   end
 
-  @spec get_islands(t) :: [ArcadeIslands.name()]
-  def get_islands(%WorldState{islands: islands}) do
-    MapSet.to_list(islands)
+  @spec get_zones(t) :: [ArcadeZones.name()]
+  def get_zones(%WorldState{zones: zones}) do
+    MapSet.to_list(zones)
   end
 end

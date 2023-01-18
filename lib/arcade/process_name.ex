@@ -3,7 +3,7 @@ defmodule Arcade.ProcessName do
   The ProcessName is responsible for ...
   """
 
-  @type name :: ArcadeWorlds.name() | ArcadeIslands.name()
+  @type name :: ArcadeWorlds.name() | ArcadeZones.name()
 
   @separator "/"
 

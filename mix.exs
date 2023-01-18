@@ -31,6 +31,7 @@ defmodule Arcade.MixProject do
       {:horde, "~> 0.8.7"},
       {:ecto_sql, "~> 3.0"},
       {:ecto_sqlite3, "~> 0.9.0"},
+      {:puid, "~> 2.0"},
       {:boundary, "~> 0.9.4", runtime: false},
       {:credo, "~> 1.6", runtime: false, only: [:dev, :test]},
       {:dialyxir, "~> 1.2", runtime: false}

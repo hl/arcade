@@ -27,18 +27,18 @@ defmodule ArcadeWorlds do
     |> WorldProcess.set_map(map)
   end
 
-  @spec register_island(name, ArcadeIslands.name()) :: :ok
-  def register_island(name, island_name) do
+  @spec register_zone(name, ArcadeZones.name()) :: :ok
+  def register_zone(name, zone_name) do
     name
     |> Arcade.Registry.whereis_name()
-    |> WorldProcess.register_island(island_name)
+    |> WorldProcess.register_zone(zone_name)
   end
 
-  @spec unregister_island(name, ArcadeIslands.name()) :: :ok
-  def unregister_island(name, island_name) do
+  @spec unregister_zone(name, ArcadeZones.name()) :: :ok
+  def unregister_zone(name, zone_name) do
     name
     |> Arcade.Registry.whereis_name()
-    |> WorldProcess.unregister_island(island_name)
+    |> WorldProcess.unregister_zone(zone_name)
   end
 
   @spec get_map(name) :: String.t() | nil
@@ -48,10 +48,10 @@ defmodule ArcadeWorlds do
     |> WorldProcess.get_map()
   end
 
-  @spec get_islands(name) :: [ArcadeIslands.name()]
-  def get_islands(name) do
+  @spec get_zones(name) :: [ArcadeZones.name()]
+  def get_zones(name) do
     name
     |> Arcade.Registry.whereis_name()
-    |> WorldProcess.get_islands()
+    |> WorldProcess.get_zones()
   end
 end

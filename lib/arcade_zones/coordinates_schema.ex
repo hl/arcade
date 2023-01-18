@@ -1,4 +1,4 @@
-defmodule ArcadeIslands.CoordinatesSchema do
+defmodule ArcadeZones.CoordinatesSchema do
   @moduledoc """
   The Coordinates schema is responsible for ...
   """
@@ -7,7 +7,7 @@ defmodule ArcadeIslands.CoordinatesSchema do
 
   import Ecto.Changeset
 
-  alias ArcadeIslands.CoordinatesSchema
+  alias ArcadeZones.CoordinatesSchema
 
   @type t :: %__MODULE__{
           x: non_neg_integer() | nil,
