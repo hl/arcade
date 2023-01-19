@@ -1,4 +1,4 @@
-defmodule ArcadeWorlds.WorldSchema do
+defmodule Arcade.Worlds.WorldSchema do
   @moduledoc """
   The World schema is responsible for ...
   """
@@ -7,15 +7,15 @@ defmodule ArcadeWorlds.WorldSchema do
 
   alias Arcade.ProcessName
   alias Arcade.Repo
-  alias ArcadeWorlds.WorldSchema
+  alias Arcade.Worlds.WorldSchema
 
   import Ecto.Changeset
 
   @type t :: %WorldSchema{
           id: non_neg_integer() | nil,
-          name: ArcadeWorlds.name() | nil,
+          name: Arcade.Worlds.name() | nil,
           map: String.t() | nil,
-          zones: [ArcadeZones.name()],
+          zones: [Arcade.Zones.name()],
           inserted_at: NaiveDateTime.t() | nil,
           updated_at: NaiveDateTime.t() | nil
         }
@@ -35,7 +35,7 @@ defmodule ArcadeWorlds.WorldSchema do
     |> Repo.insert_or_update!()
   end
 
-  @spec get_by_name(ArcadeWorlds.name()) :: t | nil
+  @spec get_by_name(Arcade.Worlds.name()) :: t | nil
   def get_by_name(name) when is_tuple(name) do
     name |> ProcessName.serialize() |> get_by_name()
   end

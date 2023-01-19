@@ -1,19 +1,19 @@
-defmodule ArcadeWorlds.WorldState do
+defmodule Arcade.Worlds.WorldState do
   @moduledoc """
   The World state is responsible for ...
   """
 
   alias Arcade.ProcessName
   alias Arcade.Utils
-  alias ArcadeWorlds.WorldSchema
-  alias ArcadeWorlds.WorldState
+  alias Arcade.Worlds.WorldSchema
+  alias Arcade.Worlds.WorldState
 
   defstruct name: nil, map: nil, zones: MapSet.new()
 
   @type t :: %WorldState{
-          name: ArcadeWorlds.name() | nil,
+          name: Arcade.Worlds.name() | nil,
           map: String.t() | nil,
-          zones: MapSet.t(ArcadeZones.name())
+          zones: MapSet.t(Arcade.Zones.name())
         }
 
   @spec set_map(t, String.t()) :: t
@@ -37,7 +37,7 @@ defmodule ArcadeWorlds.WorldState do
     WorldSchema.save!(schema, attrs)
   end
 
-  @spec load_state(ArcadeWorlds.name(), Keyword.t()) :: t
+  @spec load_state(Arcade.Worlds.name(), Keyword.t()) :: t
   def load_state(name, args) when is_tuple(name) do
     attrs =
       case WorldSchema.get_by_name(name) do
@@ -54,7 +54,7 @@ defmodule ArcadeWorlds.WorldState do
     struct(WorldState, attrs)
   end
 
-  @spec register_zone(t, ArcadeZones.name()) :: t
+  @spec register_zone(t, Arcade.Zones.name()) :: t
   def register_zone(%WorldState{} = state, zone_name) when is_tuple(zone_name) do
     case state do
       %{zones: []} -> %{state | zones: MapSet.new([zone_name])}
@@ -62,12 +62,12 @@ defmodule ArcadeWorlds.WorldState do
     end
   end
 
-  @spec unregister_zone(t, ArcadeZones.name()) :: t
+  @spec unregister_zone(t, Arcade.Zones.name()) :: t
   def unregister_zone(%WorldState{} = state, zone_name) when is_tuple(zone_name) do
     %{state | zones: MapSet.delete(state.zones, zone_name)}
   end
 
-  @spec get_zones(t) :: [ArcadeZones.name()]
+  @spec get_zones(t) :: [Arcade.Zones.name()]
   def get_zones(%WorldState{zones: zones}) do
     MapSet.to_list(zones)
   end

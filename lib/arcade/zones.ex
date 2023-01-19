@@ -1,22 +1,30 @@
-defmodule ArcadeZones do
+defmodule Arcade.Zones do
   @moduledoc """
-  The ArcadeZones is responsible for ...
+  The Arcade.Zones is responsible for ...
   """
 
-  use Boundary, deps: [Arcade, ArcadeWorlds]
+  use Boundary, deps: [Arcade, Arcade.Worlds], top_level?: true
 
-  alias ArcadeZones.ZoneDynamicSupervisor
-  alias ArcadeZones.ZoneName
-  alias ArcadeZones.ZoneProcess
-  alias ArcadeZones.ZoneState
+  alias Arcade.Worlds
+  alias Arcade.Zones.ZoneDynamicSupervisor
+  alias Arcade.Zones.ZoneName
+  alias Arcade.Zones.ZoneProcess
+  alias Arcade.Zones.ZoneState
 
-  @type name :: {:zone, String.t(), non_neg_integer(), non_neg_integer()}
+  @type name ::
+          {
+            :zone,
+            world_name :: String.t(),
+            zone_name :: String.t(),
+            x :: integer(),
+            y :: integer()
+          }
   @type x_coordinate :: non_neg_integer()
   @type y_coordinate :: non_neg_integer()
 
   @registry_type :zone
 
-  @spec start_child(String.t(), ArcadeWorlds.name(), x_coordinate, y_coordinate, Keyword.t()) ::
+  @spec start_child(String.t(), Worlds.name(), x_coordinate, y_coordinate, Keyword.t()) ::
           DynamicSupervisor.on_start_child()
   def start_child(name, world_name, x, y, attrs \\ [])
       when is_binary(name) and is_tuple(world_name) and is_integer(x) and is_integer(y) do
@@ -35,7 +43,7 @@ defmodule ArcadeZones do
     |> ZoneProcess.get_coordinates()
   end
 
-  @spec generate_zones(ArcadeWorlds.name()) :: :ok
+  @spec generate_zones(Worlds.name()) :: :ok
   def generate_zones(world_name) do
     size = Application.get_env(:arcade, :zone_size)
 

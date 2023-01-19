@@ -1,14 +1,14 @@
-defmodule ArcadeWorlds do
+defmodule Arcade.Worlds do
   @moduledoc """
-  The ArcadeWorlds is responsible for ...
+  The Worlds is responsible for ...
   """
 
-  use Boundary, deps: [Arcade]
+  use Boundary, deps: [Arcade], top_level?: true
 
-  alias ArcadeWorlds.WorldDynamicSupervisor
-  alias ArcadeWorlds.WorldProcess
+  alias Arcade.Worlds.WorldDynamicSupervisor
+  alias Arcade.Worlds.WorldProcess
 
-  @type name :: {:world, String.t()}
+  @type name :: {:world, world_name :: String.t()}
 
   @registry_type :world
 
@@ -27,14 +27,14 @@ defmodule ArcadeWorlds do
     |> WorldProcess.set_map(map)
   end
 
-  @spec register_zone(name, ArcadeZones.name()) :: :ok
+  @spec register_zone(name, Arcade.Zones.name()) :: :ok
   def register_zone(name, zone_name) do
     name
     |> Arcade.Registry.whereis_name()
     |> WorldProcess.register_zone(zone_name)
   end
 
-  @spec unregister_zone(name, ArcadeZones.name()) :: :ok
+  @spec unregister_zone(name, Arcade.Zones.name()) :: :ok
   def unregister_zone(name, zone_name) do
     name
     |> Arcade.Registry.whereis_name()
@@ -48,7 +48,7 @@ defmodule ArcadeWorlds do
     |> WorldProcess.get_map()
   end
 
-  @spec get_zones(name) :: [ArcadeZones.name()]
+  @spec get_zones(name) :: [Arcade.Zones.name()]
   def get_zones(name) do
     name
     |> Arcade.Registry.whereis_name()

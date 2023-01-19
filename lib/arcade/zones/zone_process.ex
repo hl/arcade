@@ -1,4 +1,4 @@
-defmodule ArcadeZones.ZoneProcess do
+defmodule Arcade.Zones.ZoneProcess do
   @moduledoc """
   The Zone process is responsible for ...
   """
@@ -8,8 +8,9 @@ defmodule ArcadeZones.ZoneProcess do
   require Logger
 
   alias Arcade.ProcessName
-  alias ArcadeZones.ZoneProcess
-  alias ArcadeZones.ZoneState
+  alias Arcade.Worlds
+  alias Arcade.Zones.ZoneProcess
+  alias Arcade.Zones.ZoneState
 
   # Client
 
@@ -53,7 +54,7 @@ defmodule ArcadeZones.ZoneProcess do
     name = Keyword.fetch!(args, :name)
     world_name = Keyword.fetch!(args, :world_name)
 
-    ArcadeWorlds.register_zone(world_name, name)
+    Worlds.register_zone(world_name, name)
 
     {:ok, args, {:continue, :initial_setup}}
   end
@@ -76,7 +77,7 @@ defmodule ArcadeZones.ZoneProcess do
   def terminate(reason, state) do
     Logger.info(inspect(reason))
     ZoneState.save_state(state)
-    ArcadeWorlds.unregister_zone(state.world_name, state.name)
+    Worlds.unregister_zone(state.world_name, state.name)
 
     reason
   end

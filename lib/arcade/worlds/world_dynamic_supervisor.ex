@@ -1,4 +1,4 @@
-defmodule ArcadeWorlds.WorldDynamicSupervisor do
+defmodule Arcade.Worlds.WorldDynamicSupervisor do
   @moduledoc """
   The World supervisor is responsible for ...
   """

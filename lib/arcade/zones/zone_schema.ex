@@ -1,4 +1,4 @@
-defmodule ArcadeZones.ZoneSchema do
+defmodule Arcade.Zones.ZoneSchema do
   @moduledoc """
   The Zone schema is responsible for ...
   """
@@ -7,7 +7,7 @@ defmodule ArcadeZones.ZoneSchema do
 
   alias Arcade.ProcessName
   alias Arcade.Repo
-  alias ArcadeZones.ZoneSchema
+  alias Arcade.Zones.ZoneSchema
 
   import Ecto.Changeset
 
@@ -15,7 +15,7 @@ defmodule ArcadeZones.ZoneSchema do
           id: non_neg_integer() | nil,
           name: String.t() | nil,
           world_name: String.t() | nil,
-          coordinates: Ecto.Schema.embeds_one(ArcadeZones.CoordinatesSchema.t()),
+          coordinates: Ecto.Schema.embeds_one(Arcade.Zones.ZoneCoordinatesSchema.t()),
           inserted_at: NaiveDateTime.t() | nil,
           updated_at: NaiveDateTime.t() | nil
         }
@@ -24,7 +24,7 @@ defmodule ArcadeZones.ZoneSchema do
     field :name
     field :world_name
 
-    embeds_one :coordinates, ArcadeZones.CoordinatesSchema, on_replace: :delete
+    embeds_one :coordinates, Arcade.Zones.ZoneCoordinatesSchema, on_replace: :delete
 
     timestamps()
   end
@@ -38,7 +38,7 @@ defmodule ArcadeZones.ZoneSchema do
     |> Repo.insert_or_update!()
   end
 
-  @spec get_by_name(ArcadeZones.name()) :: t | nil
+  @spec get_by_name(Arcade.Zones.name()) :: t | nil
   def get_by_name(name) when is_tuple(name) do
     name |> ProcessName.serialize() |> get_by_name()
   end

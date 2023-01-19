@@ -1,4 +1,4 @@
-defmodule ArcadeWorlds.WorldProcess do
+defmodule Arcade.Worlds.WorldProcess do
   @moduledoc """
   The World process is responsible for ...
   """
@@ -8,8 +8,8 @@ defmodule ArcadeWorlds.WorldProcess do
   require Logger
 
   alias Arcade.ProcessName
-  alias ArcadeWorlds.WorldProcess
-  alias ArcadeWorlds.WorldState
+  alias Arcade.Worlds.WorldProcess
+  alias Arcade.Worlds.WorldState
 
   # Client
 
@@ -44,12 +44,12 @@ defmodule ArcadeWorlds.WorldProcess do
     GenServer.cast(server, {:set_map, map})
   end
 
-  @spec register_zone(pid(), ArcadeZones.name()) :: :ok
+  @spec register_zone(pid(), Arcade.Zones.name()) :: :ok
   def register_zone(server, zone_name) do
     GenServer.cast(server, {:register_zone, zone_name})
   end
 
-  @spec unregister_zone(pid(), ArcadeZones.name()) :: :ok
+  @spec unregister_zone(pid(), Arcade.Zones.name()) :: :ok
   def unregister_zone(server, zone_name) do
     GenServer.cast(server, {:unregister_zone, zone_name})
   end
@@ -59,7 +59,7 @@ defmodule ArcadeWorlds.WorldProcess do
     GenServer.call(server, :get_map)
   end
 
-  @spec get_zones(pid()) :: [ArcadeZones.name()]
+  @spec get_zones(pid()) :: [Arcade.Zones.name()]
   def get_zones(server) do
     GenServer.call(server, :get_zones)
   end

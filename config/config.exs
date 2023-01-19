@@ -11,8 +11,8 @@ config :libcluster,
 config :arcade,
   ecto_repos: [Arcade.Repo],
   horde: [
-    ArcadeWorlds.WorldDynamicSupervisor,
-    ArcadeZones.ZoneDynamicSupervisor
+    Arcade.Worlds.WorldDynamicSupervisor,
+    Arcade.Zones.ZoneDynamicSupervisor
   ],
   zone_size: 5
 

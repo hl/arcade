@@ -1,9 +1,9 @@
-defmodule ArcadeApp do
+defmodule Arcade.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
 
-  use Boundary
+  use Boundary, top_level?: true
   use Application
 
   @impl true

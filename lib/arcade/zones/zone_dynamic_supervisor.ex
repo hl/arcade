@@ -1,4 +1,4 @@
-defmodule ArcadeZones.ZoneDynamicSupervisor do
+defmodule Arcade.Zones.ZoneDynamicSupervisor do
   @moduledoc """
   The Zone supervisor is responsible for ...
   """

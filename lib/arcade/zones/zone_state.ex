@@ -1,19 +1,19 @@
-defmodule ArcadeZones.ZoneState do
+defmodule Arcade.Zones.ZoneState do
   @moduledoc """
   The Zone state is responsible for ...
   """
 
   alias Arcade.ProcessName
   alias Arcade.Utils
-  alias ArcadeWorlds
-  alias ArcadeZones.ZoneSchema
-  alias ArcadeZones.ZoneState
+  alias Arcade.Worlds
+  alias Arcade.Zones.ZoneSchema
+  alias Arcade.Zones.ZoneState
 
   defstruct [:name, :world_name, :coordinates]
 
   @type t :: %__MODULE__{
-          name: ArcadeZones.name() | nil,
-          world_name: ArcadeWorlds.name() | nil,
+          name: Arcade.Zones.name() | nil,
+          world_name: Worlds.name() | nil,
           coordinates: coordinates
         }
 
@@ -37,7 +37,7 @@ defmodule ArcadeZones.ZoneState do
     ZoneSchema.save!(struct, attrs)
   end
 
-  @spec load_state(ArcadeZones.name(), Keyword.t()) :: t
+  @spec load_state(Arcade.Zones.name(), Keyword.t()) :: t
   def load_state(name, args) when is_tuple(name) do
     attrs =
       case ZoneSchema.get_by_name(name) do

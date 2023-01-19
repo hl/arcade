@@ -1,13 +1,13 @@
-defmodule ArcadeZones.CoordinatesSchema do
+defmodule Arcade.Zones.ZoneCoordinatesSchema do
   @moduledoc """
-  The Coordinates schema is responsible for ...
+  The ZoneCoordinates schema is responsible for ...
   """
 
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  alias ArcadeZones.CoordinatesSchema
+  alias Arcade.Zones.ZoneCoordinatesSchema
 
   @type t :: %__MODULE__{
           x: non_neg_integer() | nil,
@@ -22,7 +22,7 @@ defmodule ArcadeZones.CoordinatesSchema do
   end
 
   @spec changeset(t, map()) :: t | Ecto.Changeset.t()
-  def changeset(%CoordinatesSchema{} = struct, attrs) do
+  def changeset(%ZoneCoordinatesSchema{} = struct, attrs) do
     struct
     |> cast(attrs, ~w/x y/a)
     |> validate_required(~w/x y/a)
