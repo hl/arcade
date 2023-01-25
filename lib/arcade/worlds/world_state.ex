@@ -10,11 +10,11 @@ defmodule Arcade.Worlds.WorldState do
 
   defstruct name: nil, map: nil, zones: MapSet.new()
 
-  @type t :: %WorldState{
-          name: Arcade.Worlds.name() | nil,
-          map: String.t() | nil,
-          zones: MapSet.t(Arcade.Zones.name())
-        }
+  @opaque t :: %WorldState{
+            name: Arcade.Worlds.name(),
+            map: String.t() | nil,
+            zones: MapSet.t(Arcade.Zones.name())
+          }
 
   @spec set_map(t, String.t()) :: t
   def set_map(%WorldState{} = state, map) do
@@ -32,7 +32,11 @@ defmodule Arcade.Worlds.WorldState do
     name = ProcessName.serialize(map.name)
     zones = Enum.map(get_zones(state), &ProcessName.serialize/1)
     attrs = %{map | name: name, zones: zones}
-    schema = WorldSchema.get_by_name(state.name) || %WorldSchema{}
+
+    schema =
+      with nil <- WorldSchema.get_by_name(name) do
+        WorldSchema.new()
+      end
 
     WorldSchema.save!(schema, attrs)
   end
@@ -45,10 +49,12 @@ defmodule Arcade.Worlds.WorldState do
           args
 
         world_schema ->
+          zones = WorldSchema.fetch!(world_schema, :zones)
+
           world_schema
-          |> Utils.struct_to_map()
+          |> WorldSchema.to_map()
           |> Map.merge(Map.new(args))
-          |> Map.put(:zones, MapSet.new(world_schema.zones, &ProcessName.parse/1))
+          |> Map.put(:zones, MapSet.new(zones, &ProcessName.parse/1))
       end
 
     struct(WorldState, attrs)

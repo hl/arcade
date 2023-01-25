@@ -5,22 +5,31 @@ defmodule Arcade.Zones.ZoneState do
 
   alias Arcade.ProcessName
   alias Arcade.Utils
-  alias Arcade.Worlds
   alias Arcade.Zones.ZoneSchema
   alias Arcade.Zones.ZoneState
 
   defstruct [:name, :world_name, :coordinates]
 
-  @type t :: %__MODULE__{
-          name: Arcade.Zones.name() | nil,
-          world_name: Worlds.name() | nil,
-          coordinates: coordinates
-        }
+  @opaque t :: %__MODULE__{
+            name: Arcade.Zones.name(),
+            world_name: Arcade.Worlds.name(),
+            coordinates: coordinates
+          }
 
-  @type coordinates :: %{
-          x: non_neg_integer() | nil,
-          y: non_neg_integer() | nil
-        }
+  @opaque coordinates :: %{
+            x: non_neg_integer() | nil,
+            y: non_neg_integer() | nil
+          }
+
+  @spec get_name(t) :: Arcade.Zones.name()
+  def get_name(%ZoneState{name: name}) do
+    name
+  end
+
+  @spec get_world_name(t) :: Arcade.Worlds.name()
+  def get_world_name(%ZoneState{world_name: world_name}) do
+    world_name
+  end
 
   @spec save_state(t) :: ZoneSchema.t() | no_return()
   def save_state(%ZoneState{} = state) do
@@ -32,7 +41,10 @@ defmodule Arcade.Zones.ZoneState do
         world_name: ProcessName.serialize(map.world_name)
     }
 
-    struct = ZoneSchema.get_by_name(state.name) || %ZoneSchema{}
+    struct =
+      with nil <- ZoneSchema.get_by_name(state.name) do
+        ZoneSchema.new()
+      end
 
     ZoneSchema.save!(struct, attrs)
   end
@@ -46,7 +58,7 @@ defmodule Arcade.Zones.ZoneState do
 
         zone_schema ->
           zone_schema
-          |> Utils.struct_to_map()
+          |> ZoneSchema.to_map()
           |> Map.merge(Map.new(args))
       end
 

@@ -1,6 +1,6 @@
 defmodule Arcade.Zones do
   @moduledoc """
-  The Arcade.Zones is responsible for ...
+  The Zones is responsible for ...
   """
 
   use Boundary, deps: [Arcade, Arcade.Worlds], top_level?: true
@@ -9,7 +9,6 @@ defmodule Arcade.Zones do
   alias Arcade.Zones.ZoneDynamicSupervisor
   alias Arcade.Zones.ZoneName
   alias Arcade.Zones.ZoneProcess
-  alias Arcade.Zones.ZoneState
 
   @type name ::
           {
@@ -36,7 +35,7 @@ defmodule Arcade.Zones do
     |> ZoneDynamicSupervisor.start_child()
   end
 
-  @spec get_coordinates(name) :: ZoneState.coordinates()
+  @spec get_coordinates(name) :: %{x: non_neg_integer(), y: non_neg_integer()}
   def get_coordinates(name) do
     name
     |> Arcade.Registry.whereis_name()

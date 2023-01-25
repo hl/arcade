@@ -1,5 +1,5 @@
 defmodule Arcade do
   @moduledoc false
 
-  use Boundary, exports: [DynamicSupervisor, Registry, ProcessName, Repo, Utils]
+  use Boundary, exports: [DynamicSupervisor, ProcessName, Registry, Repo, Schema, Utils]
 end

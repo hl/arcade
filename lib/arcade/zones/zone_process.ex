@@ -77,7 +77,10 @@ defmodule Arcade.Zones.ZoneProcess do
   def terminate(reason, state) do
     Logger.info(inspect(reason))
     ZoneState.save_state(state)
-    Worlds.unregister_zone(state.world_name, state.name)
+
+    world_name = ZoneState.get_world_name(state)
+    name = ZoneState.get_name(state)
+    Worlds.unregister_zone(world_name, name)
 
     reason
   end
