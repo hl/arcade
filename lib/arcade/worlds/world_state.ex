@@ -2,35 +2,26 @@ defmodule Arcade.Worlds.WorldState do
   @moduledoc """
   The World state is responsible for ...
   """
+  use TypedStruct
 
   alias Arcade.ProcessName
   alias Arcade.Utils
   alias Arcade.Worlds.WorldSchema
   alias Arcade.Worlds.WorldState
 
-  defstruct name: nil, map: nil, zones: MapSet.new()
+  typedstruct opaque: true do
+    plugin TypedStructOpaque, prefixes: [get: "get_", set: "set_"]
 
-  @opaque t :: %WorldState{
-            name: Arcade.Worlds.name(),
-            map: String.t() | nil,
-            zones: MapSet.t(Arcade.Zones.name())
-          }
-
-  @spec set_map(t, String.t()) :: t
-  def set_map(%WorldState{} = state, map) do
-    %{state | map: map}
-  end
-
-  @spec get_map(t) :: String.t()
-  def get_map(%WorldState{map: map}) do
-    map
+    field :name, Arcade.Worlds.name()
+    field :map, String.t()
+    field :zones, MapSet.t(Arcade.Zones.name()) | [Arcade.Zones.name()]
   end
 
   @spec save_state(t) :: WorldSchema.t() | no_return()
   def save_state(%WorldState{} = state) do
     map = Utils.struct_to_map(state)
     name = ProcessName.serialize(map.name)
-    zones = Enum.map(get_zones(state), &ProcessName.serialize/1)
+    zones = Enum.map(zones(state), &ProcessName.serialize/1)
     attrs = %{map | name: name, zones: zones}
 
     schema =
@@ -73,8 +64,7 @@ defmodule Arcade.Worlds.WorldState do
     %{state | zones: MapSet.delete(state.zones, zone_name)}
   end
 
-  @spec get_zones(t) :: [Arcade.Zones.name()]
-  def get_zones(%WorldState{zones: zones}) do
+  def zones(%WorldState{zones: zones}) do
     MapSet.to_list(zones)
   end
 end
