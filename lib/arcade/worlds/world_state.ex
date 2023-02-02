@@ -10,18 +10,16 @@ defmodule Arcade.Worlds.WorldState do
   alias Arcade.Worlds.WorldState
 
   typedstruct opaque: true do
-    plugin TypedStructOpaque, prefixes: [get: "get_", set: "set_"]
-
     field :name, Arcade.Worlds.name()
     field :map, String.t()
-    field :zones, MapSet.t(Arcade.Zones.name()) | [Arcade.Zones.name()]
+    field :zones, MapSet.t(Arcade.Zones.name()), default: MapSet.new()
   end
 
   @spec save_state(t) :: WorldSchema.t() | no_return()
   def save_state(%WorldState{} = state) do
     map = Utils.struct_to_map(state)
     name = ProcessName.serialize(map.name)
-    zones = Enum.map(zones(state), &ProcessName.serialize/1)
+    zones = Enum.map(get_zones(state), &ProcessName.serialize/1)
     attrs = %{map | name: name, zones: zones}
 
     schema =
@@ -40,7 +38,7 @@ defmodule Arcade.Worlds.WorldState do
           args
 
         world_schema ->
-          zones = WorldSchema.fetch!(world_schema, :zones)
+          zones = WorldSchema.get_zones(world_schema)
 
           world_schema
           |> WorldSchema.to_map()
@@ -52,11 +50,8 @@ defmodule Arcade.Worlds.WorldState do
   end
 
   @spec register_zone(t, Arcade.Zones.name()) :: t
-  def register_zone(%WorldState{} = state, zone_name) when is_tuple(zone_name) do
-    case state do
-      %{zones: []} -> %{state | zones: MapSet.new([zone_name])}
-      %{zones: zones} -> %{state | zones: MapSet.put(zones, zone_name)}
-    end
+  def register_zone(%WorldState{zones: zones} = state, zone_name) when is_tuple(zone_name) do
+    %{state | zones: MapSet.put(zones, zone_name)}
   end
 
   @spec unregister_zone(t, Arcade.Zones.name()) :: t
@@ -64,7 +59,18 @@ defmodule Arcade.Worlds.WorldState do
     %{state | zones: MapSet.delete(state.zones, zone_name)}
   end
 
-  def zones(%WorldState{zones: zones}) do
-    MapSet.to_list(zones)
+  @spec get_map(t) :: String.t()
+  def get_map(%WorldState{map: map}) do
+    map
+  end
+
+  @spec set_map(t, String.t()) :: t
+  def set_map(%WorldState{} = state, map) do
+    %{state | map: map}
+  end
+
+  @spec get_zones(t) :: [Arcade.Zones.name()]
+  def get_zones(%WorldState{zones: zones}) do
+    zones
   end
 end

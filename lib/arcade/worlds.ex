@@ -12,8 +12,8 @@ defmodule Arcade.Worlds do
 
   @registry_type :world
 
-  @spec start_child(String.t(), Keyword.t()) :: DynamicSupervisor.on_start_child()
-  def start_child(name, attrs \\ []) when is_binary(name) do
+  @spec start(String.t(), Keyword.t()) :: DynamicSupervisor.on_start_child()
+  def start(name, attrs \\ []) when is_binary(name) do
     attrs
     |> Keyword.put(:name, {@registry_type, name})
     |> WorldProcess.child_spec()

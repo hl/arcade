@@ -23,9 +23,9 @@ defmodule Arcade.Zones do
 
   @registry_type :zone
 
-  @spec start_child(String.t(), Worlds.name(), x_coordinate, y_coordinate, Keyword.t()) ::
+  @spec start(String.t(), Worlds.name(), x_coordinate, y_coordinate, Keyword.t()) ::
           DynamicSupervisor.on_start_child()
-  def start_child(name, world_name, x, y, attrs \\ [])
+  def start(name, world_name, x, y, attrs \\ [])
       when is_binary(name) and is_tuple(world_name) and is_integer(x) and is_integer(y) do
     attrs
     |> Keyword.put(:name, {@registry_type, elem(world_name, 1), name, x, y})
@@ -47,7 +47,7 @@ defmodule Arcade.Zones do
     size = Application.get_env(:arcade, :zone_size)
 
     for x <- 0..(size - 1), y <- 0..(size - 1) do
-      start_child(ZoneName.generate(), world_name, x, y)
+      start(ZoneName.generate(), world_name, x, y)
     end
 
     :ok

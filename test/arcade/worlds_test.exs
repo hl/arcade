@@ -3,7 +3,7 @@ defmodule Arcade.WorldsTest do
 
   alias Arcade.Worlds
 
-  describe "Arcade.Worlds.start_child/1" do
+  describe "Arcade.Worlds.start/1" do
     setup [:setup_world]
 
     test "start a new supervised world", %{world_name: world_name} do

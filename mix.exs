@@ -33,7 +33,7 @@ defmodule Arcade.MixProject do
       {:ecto_sqlite3, "~> 0.9.0"},
       {:puid, "~> 2.0"},
       {:typed_struct, "~> 0.3.0"},
-      {:typed_struct_opaque, github: "hl/typed_struct_opaque"},
+      {:typed_ecto_schema, "~> 0.4.1"},
       {:boundary, "~> 0.9.4", runtime: false},
       {:credo, "~> 1.6", runtime: false, only: [:dev, :test]},
       {:dialyxir, "~> 1.2", runtime: false}

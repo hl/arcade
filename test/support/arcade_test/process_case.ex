@@ -15,7 +15,7 @@ defmodule ArcadeTest.ProcessCase do
 
   def setup_world(_context) do
     world_name = random_name("test-world")
-    {:ok, world_pid} = Worlds.start_child(world_name)
+    {:ok, world_pid} = Worlds.start(world_name)
     world_name = Arcade.Registry.get_name(world_pid)
 
     [world_pid: world_pid, world_name: world_name]
